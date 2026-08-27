@@ -1,0 +1,7 @@
+interface:
+  display_name: "莫奈油画对照图"
+  short_description: "按上传顺序逐张生成莫奈油画，并输出原图与效果图的一对一高清对照 PNG"
+  brand_color: "#F7F4EE"
+  default_prompt: "使用 $monet-comparison 按上传顺序处理全部图片，并输出一图一张的莫奈油画对照 PNG。"
+policy:
+  allow_implicit_invocation: true
