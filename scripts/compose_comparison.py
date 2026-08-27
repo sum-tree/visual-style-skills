@@ -12,7 +12,7 @@ from PIL import Image, ImageOps
 
 BACKGROUND = (247, 244, 238)  # #F7F4EE
 BORDER = (229, 224, 215)  # #E5E0D7
-ASPECT_TOLERANCE = 0.002
+ASPECT_TOLERANCE = 0.005
 
 
 def parse_args() -> argparse.Namespace:
