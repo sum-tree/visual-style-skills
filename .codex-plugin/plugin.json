@@ -1,0 +1,33 @@
+{
+  "name": "visual-style-skills",
+  "version": "0.1.0",
+  "description": "把照片逐张转换为不同艺术风格，并输出保留真实原图的一对一高清对照图。",
+  "author": {
+    "name": "sum-tree",
+    "url": "https://github.com/sum-tree"
+  },
+  "repository": "https://github.com/sum-tree/visual-style-skills",
+  "keywords": [
+    "image-generation",
+    "art-styles",
+    "photo-comparison"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Visual Style Skills",
+    "shortDescription": "将照片批量转换为艺术风格，并制作真实原图对照图",
+    "longDescription": "包含莫奈印象派与毕加索启发的合成立体主义工作流。每张照片独立生成效果图，并与未经修改的真实原图排版为高清 PNG。",
+    "developerName": "sum-tree",
+    "category": "Creative & Design",
+    "capabilities": [
+      "Image generation",
+      "Batch image processing",
+      "Comparison layout"
+    ],
+    "brandColor": "#F7F4EE",
+    "defaultPrompt": [
+      "把我上传的照片逐张制作成莫奈油画对照图。",
+      "把我上传的照片逐张制作成毕加索几何抽象对照图。"
+    ]
+  }
+}
