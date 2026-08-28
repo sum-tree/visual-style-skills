@@ -1,0 +1,7 @@
+interface:
+  display_name: "吴冠中写意水墨对照图"
+  short_description: "以黑白灰骨架、书写性墨线和高纯度彩点重构照片，并输出高清对照 PNG"
+  brand_color: "#E56B2F"
+  default_prompt: "使用 $wu-guanzhong-expressive-ink-comparison 按上传顺序将全部照片制作成吴冠中式写意水墨，并逐张输出对照 PNG。"
+policy:
+  allow_implicit_invocation: true

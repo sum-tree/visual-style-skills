@@ -12,6 +12,7 @@
 | `modern-gongbi-sketch-comparison` | 高保真现代场景、细墨线与淡矿物设色 | `使用 $modern-gongbi-sketch-comparison 按现代工笔写生风格处理全部图片` |
 | `traditional-expressive-watercolor-comparison` | 大片纸白、透明色团、结构线与受控飞溅 | `使用 $traditional-expressive-watercolor-comparison 按传统意象水彩处理全部图片` |
 | `modern-minimal-illustration-comparison` | 巨大留白、规则色块、浅层叙事与受控渐变 | `使用 $modern-minimal-illustration-comparison 按现代极简插画处理全部图片` |
+| `wu-guanzhong-expressive-ink-comparison` | 黑白灰构成、书写性墨线与高纯度彩点 | `使用 $wu-guanzhong-expressive-ink-comparison 按吴冠中写意水墨处理全部图片` |
 
 ## 使用方式
 
