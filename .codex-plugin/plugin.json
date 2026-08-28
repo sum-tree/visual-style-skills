@@ -1,6 +1,6 @@
 {
   "name": "visual-style-skills",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "把照片逐张转换为不同艺术风格，并输出保留真实原图的一对一高清对照图。",
   "author": {
     "name": "sum-tree",
