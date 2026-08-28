@@ -1,7 +1,7 @@
 interface:
   display_name: "毕加索几何抽象对照图"
-  short_description: "批量生成合成立体主义几何抽象画，并制作保留真实原图的高清对照 PNG"
+  short_description: "批量生成粗轮廓、高纯度大色块的毕加索式人物抽象对照 PNG"
   brand_color: "#D7A33D"
-  default_prompt: "使用 $picasso-geometric-comparison 按上传顺序处理全部图片，并输出一图一张的几何抽象对照 PNG。"
+  default_prompt: "使用 $picasso-geometric-comparison 按中高抽象强度处理全部图片，采用粗黑轮廓和高纯度大色块，并逐张输出对照 PNG。"
 policy:
   allow_implicit_invocation: true

@@ -7,7 +7,7 @@
 | Skill | 默认效果 | 调用示例 |
 | --- | --- | --- |
 | `monet-comparison` | 莫奈式印象派油画 | `使用 $monet-comparison 按莫奈风格处理全部图片` |
-| `picasso-geometric-comparison` | 合成立体主义、中等抽象 | `使用 $picasso-geometric-comparison 按毕加索风格处理全部图片` |
+| `picasso-geometric-comparison` | 1930 年代人物式抽象、中高强度 | `使用 $picasso-geometric-comparison 按毕加索风格处理全部图片` |
 
 ## 使用方式
 
