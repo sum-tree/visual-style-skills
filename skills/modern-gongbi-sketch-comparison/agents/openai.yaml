@@ -1,0 +1,7 @@
+interface:
+  display_name: "现代工笔写生对照图"
+  short_description: "以细墨线、淡矿物设色和暖宣纸质感精细重绘现代照片，并输出高清对照 PNG"
+  brand_color: "#829589"
+  default_prompt: "使用 $modern-gongbi-sketch-comparison 按上传顺序将全部照片制作成现代工笔写生风格，并逐张输出对照 PNG。"
+policy:
+  allow_implicit_invocation: true
