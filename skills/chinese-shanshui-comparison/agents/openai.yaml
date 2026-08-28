@@ -1,7 +1,7 @@
 interface:
   display_name: "中国山水画对照图"
-  short_description: "逐张生成黑白或彩色水墨山水，并输出保留真实原图的高清对照 PNG"
+  short_description: "以留白、虚实和散点空间重构黑白或彩色水墨山水，并输出高清对照 PNG"
   brand_color: "#657568"
-  default_prompt: "使用 $chinese-shanshui-comparison 按上传顺序处理全部风景图片；未指定颜色时使用黑白水墨，并逐张输出对照 PNG。"
+  default_prompt: "使用 $chinese-shanshui-comparison 按上传顺序将风景图片意境化重构为水墨山水；未指定颜色时使用黑白，并逐张输出对照 PNG。"
 policy:
   allow_implicit_invocation: true
