@@ -1,0 +1,7 @@
+interface:
+  display_name: "传统意象水彩对照图"
+  short_description: "以大片纸白、透明色团和清晰结构线生成轻盈意象水彩，并输出高清对照 PNG"
+  brand_color: "#E6A06F"
+  default_prompt: "使用 $traditional-expressive-watercolor-comparison 按上传顺序将全部照片制作成传统意象水彩，并逐张输出对照 PNG。"
+policy:
+  allow_implicit_invocation: true
