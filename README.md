@@ -8,6 +8,7 @@
 | --- | --- | --- |
 | `monet-comparison` | 莫奈式印象派油画 | `使用 $monet-comparison 按莫奈风格处理全部图片` |
 | `picasso-geometric-comparison` | 1930 年代人物式抽象、中高强度 | `使用 $picasso-geometric-comparison 按毕加索风格处理全部图片` |
+| `chinese-shanshui-comparison` | 默认黑白水墨，可切换彩色设色山水 | `使用 $chinese-shanshui-comparison 按中国山水画风格处理全部图片` |
 
 ## 使用方式
 
