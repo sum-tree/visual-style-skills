@@ -1,6 +1,38 @@
 # Visual Style Skills
 
-面向 ChatGPT 与 Codex 的图片风格化 Skill 合集。每个 Skill 都按上传顺序逐张处理图片，保留未经修改的真实原图，并为每张输入输出一张独立的高清 PNG 对照成品。
+面向 ChatGPT、Codex 与 OpenAI Image API 的图片风格化合集。仓库同时提供可独立安装的 Skill，以及调用 `gpt-image-2` 的轻量 Web APP。每个流程都按上传顺序逐张处理图片，保留真实原图，并为每张输入输出独立高清 PNG 对照成品。
+
+## Web APP
+
+APP 位于 `apps/web`，通过 Monorepo 中的 `packages/style-registry` 读取各 Skill 的 `app-style.json`，并通过 `packages/comparison-composer` 确定性制作原图与效果图对照成品。
+
+主要能力：
+
+- 多图上传、排序和逐张独立处理。
+- 七种预置风格及黑白／彩色、抽象强度等风格变体。
+- 草稿、标准、高清三档 `gpt-image-2` 画质。
+- 最多两个任务并发，保持输入与结果的稳定顺序。
+- 原图、效果图和最终 PNG 对照图分别预览；效果图与对照图可单独下载。
+- API Key 只存在服务端，不进入浏览器代码。
+
+本地运行：
+
+```powershell
+npm install
+Copy-Item apps/web/.env.example apps/web/.env.local
+# 在 apps/web/.env.local 中设置 OPENAI_API_KEY
+npm run dev
+```
+
+默认访问 `http://localhost:3000`。未配置 API Key 时，界面可以正常打开，但生成接口会返回明确的配置提示。
+
+验证：
+
+```powershell
+npm run check
+```
+
+图像生成接口和参数以 [OpenAI Image generation 文档](https://developers.openai.com/api/docs/guides/image-generation) 为准。APP 的上传与预置风格交互结构参考并改造自 OpenAI 的 [ImageGen Photobooth Demo](https://github.com/openai/openai-imagegen-demo)，相应许可证见 `apps/web/OPENAI_DEMO_LICENSE.md`。
 
 ## Skills
 
@@ -19,6 +51,7 @@
 - 整套使用：将仓库作为 Skill-only Plugin 安装，一次获得全部风格。
 - 单独使用：通过 Skill Installer 安装 `skills/<skill-name>` 对应的 GitHub 子目录。
 - 扩展风格：在 `skills/` 下新增独立目录；每个目录必须可以脱离仓库其他 Skill 单独运行。
+- APP 预置：为 Skill 提供符合现有结构的 `app-style.json`，并在 `packages/style-registry` 注册。
 
 ## 共同输出约束
 

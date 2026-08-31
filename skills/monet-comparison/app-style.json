@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "monet-comparison",
+  "skillName": "monet-comparison",
+  "name": "莫奈印象派",
+  "description": "断续笔触、空气透视与明亮分色，保持原场景结构。",
+  "accent": ["#7AA8A4", "#E7C77A"],
+  "defaultVariant": "default",
+  "defaultQuality": "medium",
+  "outputSuffix": "monet_comparison",
+  "variants": [
+    {
+      "id": "default",
+      "label": "自然光感",
+      "prompt": "将输入照片转化为克劳德·莫奈式印象派手绘油画。严格保留画幅、裁切、构图、视角、主体数量和位置、地平线及主要几何结构，不增加、删除、移动或替换主要物体。只改变媒介、色彩、光线与笔触：使用可见的断续油画笔触、柔和边缘、空气透视、明亮分色和自然画布肌理；阴影使用蓝绿、淡紫或冷灰，避免纯黑。远景可融化为有节奏的色块，但主体必须清晰可辨。避免摄影滤镜、卡通、粗重描边、超现实变形、塑料质感和浑浊色彩。"
+    }
+  ]
+}

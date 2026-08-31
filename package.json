@@ -1,0 +1,19 @@
+{
+  "name": "visual-style-skills",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @visual-style/web",
+    "build": "npm run build --workspace @visual-style/web",
+    "lint": "npm run lint --workspace @visual-style/web",
+    "test": "npm run test --workspaces --if-present",
+    "check": "npm run lint && npm run test && npm run build"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  }
+}

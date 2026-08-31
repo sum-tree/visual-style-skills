@@ -1,0 +1,31 @@
+{
+  "name": "@visual-style/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "test": "tsx --test lib/*.test.ts"
+  },
+  "dependencies": {
+    "@visual-style/comparison-composer": "*",
+    "@visual-style/style-registry": "*",
+    "next": "16.3.3",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "sharp": "^0.35.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.12",
+    "@types/node": "^22.18.0",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "eslint": "^9.35.0",
+    "eslint-config-next": "16.3.3",
+    "tailwindcss": "^4.1.12",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}
