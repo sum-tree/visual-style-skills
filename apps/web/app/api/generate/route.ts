@@ -6,6 +6,7 @@ import {
 import sharp from "sharp";
 import { NextRequest } from "next/server";
 import { chooseOpenAiImageSize } from "@/lib/image-size";
+import { estimateGptImage2Cost } from "@/lib/image-billing";
 import {
   API_KEY_SESSION_COOKIE,
   isTrustedSameOrigin,
@@ -22,6 +23,7 @@ const QUALITY_VALUES = new Set<ImageQuality>(["low", "medium", "high"]);
 
 type OpenAiImageResponse = {
   data?: Array<{ b64_json?: string; output_format?: string }>;
+  usage?: unknown;
   error?: {
     code?: string;
     message?: string;
@@ -226,5 +228,6 @@ export async function POST(request: NextRequest) {
     effectDataUrl: bufferToDataUrl(effect),
     comparisonDataUrl: bufferToDataUrl(comparison.buffer),
     comparisonMetadata: comparison.metadata,
+    billing: estimateGptImage2Cost(payload.usage),
   }, { headers: { "Cache-Control": "no-store" } });
 }

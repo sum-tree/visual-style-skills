@@ -48,10 +48,56 @@ type TaskResult = {
 type GenerateResponse = {
   style: { id: string; name: string; outputSuffix: string };
   variant: { id: string; label: string };
+  quality: ImageQuality;
   size: string;
+  requestId?: string | null;
   effectDataUrl: string;
   comparisonDataUrl: string;
+  billing: BillingEstimate;
   error?: { code?: string; message?: string };
+};
+
+type BillingUsage = {
+  totalTokens: number | null;
+  inputTokens: number | null;
+  outputTokens: number | null;
+  textInputTokens: number | null;
+  imageInputTokens: number | null;
+  cachedImageInputTokens: number;
+};
+
+type BillingCost = {
+  textInputUsd: number;
+  imageInputUsd: number;
+  cachedImageInputUsd: number;
+  imageOutputUsd: number;
+  totalUsd: number;
+};
+
+type BillingEstimate = {
+  model: string;
+  currency: "USD";
+  effectiveDate: string;
+  pricing: {
+    textInput: number;
+    imageInput: number;
+    cachedImageInput: number;
+    imageOutput: number;
+  };
+  usage: BillingUsage | null;
+  cost: BillingCost | null;
+};
+
+type BillingRecord = {
+  id: string;
+  occurredAt: number;
+  sourceName: string;
+  styleName: string;
+  styleNameEn: string;
+  quality: ImageQuality;
+  size: string;
+  requestId?: string | null;
+  billing: BillingEstimate;
 };
 
 type ApiKeyResponse = {
@@ -66,7 +112,7 @@ const COPY = {
     language: "界面语言",
     apiKey: "API KEY",
     apiBilling: "API 计费",
-    apiBillingAria: "打开 OpenAI API 计费页面（新窗口）",
+    apiBillingAria: "查看本地 API token 与费用明细",
     keyLoading: "检查中",
     keyMissing: "未配置",
     keySession: "已安全连接",
@@ -144,6 +190,29 @@ const COPY = {
     keyInvalid: "Key 格式无效，请检查后重试。",
     keyRequestFailed: "无法更新 API Key，请稍后重试。",
     keyStatusFailed: "暂时无法读取 API Key 状态。",
+    billingDialogTitle: "API Token 与费用明细",
+    billingIntro:
+      "每次生成完成后，根据 API 返回的实际 token 分类在本机页面内估算。不会读取账户余额，也不会把用量记录写入浏览器存储。",
+    billingEstimatedTotal: "本次页面累计估算",
+    billingPricedCalls: (priced: number, total: number) =>
+      `${priced}/${total} 次调用已返回完整计费用量`,
+    billingRateTitle: "GPT-Image-2 标准单价",
+    billingRateUnit: "美元 / 100 万 token",
+    billingTextInput: "文本输入",
+    billingImageInput: "图片输入",
+    billingCachedImageInput: "缓存图片输入",
+    billingImageOutput: "图片输出",
+    billingLedgerTitle: "本地调用明细",
+    billingEmptyTitle: "尚无计费记录",
+    billingEmptyCopy: "完成图片生成后，这里会显示该次调用返回的 token 与估算费用。",
+    billingUsageUnavailable:
+      "接口未返回可按类别计费的完整 usage；已保留可用 token，但不推测金额。",
+    billingTotalTokens: "总 token",
+    billingCostDetail: "费用拆分",
+    billingEstimateNote: (date: string) =>
+      `按 ${date} 官方标准价估算；最终费用以 API 服务商账单为准。`,
+    clearBilling: "清空本地明细",
+    noChargeData: "暂无金额",
     footer:
       "API Key 仅存在服务端环境变量或临时内存会话中，不写入浏览器存储。",
   },
@@ -152,7 +221,7 @@ const COPY = {
     language: "Interface language",
     apiKey: "API KEY",
     apiBilling: "API BILLING",
-    apiBillingAria: "Open OpenAI API billing in a new tab",
+    apiBillingAria: "View local API token and cost details",
     keyLoading: "Checking",
     keyMissing: "Not configured",
     keySession: "Securely connected",
@@ -232,6 +301,30 @@ const COPY = {
     keyInvalid: "The key format is invalid. Check it and try again.",
     keyRequestFailed: "Unable to update the API key. Try again shortly.",
     keyStatusFailed: "Unable to read API key status right now.",
+    billingDialogTitle: "API tokens and cost details",
+    billingIntro:
+      "After each generation, this page estimates cost locally from the token categories returned by the API. It never reads your account balance or stores usage in browser storage.",
+    billingEstimatedTotal: "Estimated total on this page",
+    billingPricedCalls: (priced: number, total: number) =>
+      `${priced}/${total} call(s) returned complete billable usage`,
+    billingRateTitle: "GPT-Image-2 standard rates",
+    billingRateUnit: "USD / 1M tokens",
+    billingTextInput: "Text input",
+    billingImageInput: "Image input",
+    billingCachedImageInput: "Cached image input",
+    billingImageOutput: "Image output",
+    billingLedgerTitle: "Local call details",
+    billingEmptyTitle: "No billing records yet",
+    billingEmptyCopy:
+      "After an image finishes generating, its returned tokens and estimated cost will appear here.",
+    billingUsageUnavailable:
+      "The endpoint did not return complete category-level usage. Available tokens are shown, but no amount is inferred.",
+    billingTotalTokens: "Total tokens",
+    billingCostDetail: "Cost breakdown",
+    billingEstimateNote: (date: string) =>
+      `Estimated with official standard rates dated ${date}; the API provider invoice is authoritative.`,
+    clearBilling: "Clear local details",
+    noChargeData: "No amount",
     footer:
       "API keys remain in server environment variables or temporary server-memory sessions—never browser storage.",
   },
@@ -259,6 +352,10 @@ function downloadDataUrl(dataUrl: string, filename: string) {
   anchor.remove();
 }
 
+function formatUsd(value: number, compact = false) {
+  return `$${value.toFixed(compact ? 4 : 6)}`;
+}
+
 export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
   const [locale, setLocale] = useState<Locale>("zh");
   const [uploads, setUploads] = useState<UploadItem[]>([]);
@@ -277,9 +374,11 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
   const [apiKeyInput, setApiKeyInput] = useState("");
   const [apiKeyNotice, setApiKeyNotice] = useState("");
   const [apiKeyBusy, setApiKeyBusy] = useState(false);
+  const [billingRecords, setBillingRecords] = useState<BillingRecord[]>([]);
   const abortRef = useRef<AbortController | null>(null);
   const uploadsRef = useRef<UploadItem[]>([]);
   const keyDialogRef = useRef<HTMLDialogElement | null>(null);
+  const billingDialogRef = useRef<HTMLDialogElement | null>(null);
   const copy = COPY[locale];
 
   useEffect(() => {
@@ -330,6 +429,26 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
   const completedCount = results.filter(
     (item) => item.status === "success" || item.status === "error",
   ).length;
+  const billingTotalUsd = useMemo(
+    () =>
+      billingRecords.reduce(
+        (total, record) => total + (record.billing.cost?.totalUsd ?? 0),
+        0,
+      ),
+    [billingRecords],
+  );
+  const pricedBillingCount = billingRecords.filter(
+    (record) => record.billing.cost !== null,
+  ).length;
+  const billingPricing = billingRecords.at(-1)?.billing ?? {
+    effectiveDate: "2026-09-01",
+    pricing: {
+      textInput: 5,
+      imageInput: 8,
+      cachedImageInput: 2,
+      imageOutput: 30,
+    },
+  };
 
   const localizedStyleName = useCallback(
     (style: PublicStyle) => (locale === "en" ? style.nameEn : style.name),
@@ -360,6 +479,10 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
   function openKeyDialog() {
     setApiKeyNotice("");
     keyDialogRef.current?.showModal();
+  }
+
+  function openBillingDialog() {
+    billingDialogRef.current?.showModal();
   }
 
   async function saveApiKey(event: FormEvent<HTMLFormElement>) {
@@ -502,6 +625,20 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
         outputSuffix: payload.style.outputSuffix,
         size: payload.size,
       });
+      setBillingRecords((current) => [
+        ...current,
+        {
+          id: makeId(),
+          occurredAt: Date.now(),
+          sourceName: task.sourceName,
+          styleName: task.styleName,
+          styleNameEn: task.styleNameEn,
+          quality: payload.quality,
+          size: payload.size,
+          requestId: payload.requestId,
+          billing: payload.billing,
+        },
+      ]);
     } catch (error) {
       if (signal.aborted) {
         updateTask(task.id, { status: "cancelled", error: undefined });
@@ -630,17 +767,16 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
             <b>{copy.apiKey}</b>
             <small>{apiKeyStatusLabel}</small>
           </button>
-          <a
-            className="billing-link"
-            href="https://platform.openai.com/settings/organization/billing/overview"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            className="billing-button"
+            onClick={openBillingDialog}
             aria-label={copy.apiBillingAria}
           >
             <span aria-hidden="true">$</span>
-            {copy.apiBilling}
-            <b aria-hidden="true">↗</b>
-          </a>
+            <b>{copy.apiBilling}</b>
+            <small>{formatUsd(billingTotalUsd, true)}</small>
+          </button>
           <div className="header-badge">
             <span className="live-dot" />
             GPT-IMAGE-2
@@ -724,6 +860,170 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
           </form>
         ) : null}
         {apiKeyNotice ? <p className="key-notice" role="status">{apiKeyNotice}</p> : null}
+      </dialog>
+
+      <dialog
+        className="api-key-dialog billing-dialog"
+        ref={billingDialogRef}
+        aria-labelledby="billing-dialog-title"
+      >
+        <div className="dialog-heading">
+          <div>
+            <p className="eyebrow">LOCAL USAGE LEDGER</p>
+            <h2 id="billing-dialog-title">{copy.billingDialogTitle}</h2>
+          </div>
+          <button
+            type="button"
+            className="dialog-close"
+            onClick={() => billingDialogRef.current?.close()}
+            aria-label={copy.close}
+          >
+            ×
+          </button>
+        </div>
+        <p className="dialog-security-copy">{copy.billingIntro}</p>
+
+        <section className="billing-summary" aria-label={copy.billingEstimatedTotal}>
+          <span>{copy.billingEstimatedTotal}</span>
+          <strong>{formatUsd(billingTotalUsd)}</strong>
+          <small>
+            {copy.billingPricedCalls(pricedBillingCount, billingRecords.length)}
+          </small>
+        </section>
+
+        <section className="billing-rates">
+          <header>
+            <strong>{copy.billingRateTitle}</strong>
+            <span>{copy.billingRateUnit}</span>
+          </header>
+          <dl>
+            {([
+              [copy.billingTextInput, billingPricing.pricing.textInput],
+              [copy.billingImageInput, billingPricing.pricing.imageInput],
+              [
+                copy.billingCachedImageInput,
+                billingPricing.pricing.cachedImageInput,
+              ],
+              [copy.billingImageOutput, billingPricing.pricing.imageOutput],
+            ] as const).map(([label, rate]) => (
+              <div key={label}>
+                <dt>{label}</dt>
+                <dd>${rate.toFixed(2)}</dd>
+              </div>
+            ))}
+          </dl>
+          <p>{copy.billingEstimateNote(billingPricing.effectiveDate)}</p>
+        </section>
+
+        <section className="billing-ledger">
+          <h3>{copy.billingLedgerTitle}</h3>
+          {!billingRecords.length ? (
+            <div className="billing-empty">
+              <strong>{copy.billingEmptyTitle}</strong>
+              <p>{copy.billingEmptyCopy}</p>
+            </div>
+          ) : (
+            <ol>
+              {billingRecords.map((record, index) => {
+                const usage = record.billing.usage;
+                const cost = record.billing.cost;
+                return (
+                  <li key={record.id}>
+                    <header>
+                      <span>{String(index + 1).padStart(2, "0")}</span>
+                      <div>
+                        <strong>
+                          {locale === "en" ? record.styleNameEn : record.styleName}
+                        </strong>
+                        <small>
+                          {record.sourceName} · {record.quality} · {record.size}
+                        </small>
+                      </div>
+                      <div>
+                        <strong>{cost ? formatUsd(cost.totalUsd) : "—"}</strong>
+                        <small>
+                          {new Intl.DateTimeFormat(
+                            locale === "zh" ? "zh-CN" : "en-US",
+                            { hour: "2-digit", minute: "2-digit", second: "2-digit" },
+                          ).format(record.occurredAt)}
+                        </small>
+                      </div>
+                    </header>
+                    {usage ? (
+                      <dl className="billing-token-grid">
+                        <div>
+                          <dt>{copy.billingTextInput}</dt>
+                          <dd>{usage.textInputTokens?.toLocaleString() ?? "—"}</dd>
+                        </div>
+                        <div>
+                          <dt>{copy.billingImageInput}</dt>
+                          <dd>{usage.imageInputTokens?.toLocaleString() ?? "—"}</dd>
+                        </div>
+                        <div>
+                          <dt>{copy.billingCachedImageInput}</dt>
+                          <dd>{usage.cachedImageInputTokens.toLocaleString()}</dd>
+                        </div>
+                        <div>
+                          <dt>{copy.billingImageOutput}</dt>
+                          <dd>{usage.outputTokens?.toLocaleString() ?? "—"}</dd>
+                        </div>
+                        <div>
+                          <dt>{copy.billingTotalTokens}</dt>
+                          <dd>{usage.totalTokens?.toLocaleString() ?? "—"}</dd>
+                        </div>
+                      </dl>
+                    ) : null}
+                    {cost ? (
+                      <div className="billing-cost-detail">
+                        <span>{copy.billingCostDetail}</span>
+                        <dl>
+                          <div>
+                            <dt>{copy.billingTextInput}</dt>
+                            <dd>{formatUsd(cost.textInputUsd)}</dd>
+                          </div>
+                          <div>
+                            <dt>{copy.billingImageInput}</dt>
+                            <dd>{formatUsd(cost.imageInputUsd)}</dd>
+                          </div>
+                          <div>
+                            <dt>{copy.billingCachedImageInput}</dt>
+                            <dd>{formatUsd(cost.cachedImageInputUsd)}</dd>
+                          </div>
+                          <div>
+                            <dt>{copy.billingImageOutput}</dt>
+                            <dd>{formatUsd(cost.imageOutputUsd)}</dd>
+                          </div>
+                        </dl>
+                      </div>
+                    ) : (
+                      <p className="billing-unavailable">
+                        {copy.billingUsageUnavailable}
+                      </p>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          )}
+        </section>
+
+        <div className="dialog-actions billing-actions">
+          <button
+            type="button"
+            className="secondary-action danger"
+            disabled={!billingRecords.length}
+            onClick={() => setBillingRecords([])}
+          >
+            {copy.clearBilling}
+          </button>
+          <button
+            type="button"
+            className="primary-action"
+            onClick={() => billingDialogRef.current?.close()}
+          >
+            {copy.close}
+          </button>
+        </div>
       </dialog>
 
       <section className="hero" id="top">

@@ -184,27 +184,26 @@ button {
   grid-column: 2;
 }
 
-.billing-link {
+.billing-button {
   height: 34px;
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: 16px auto;
   align-items: center;
-  gap: 7px;
+  column-gap: 7px;
   border: 1px solid var(--line);
   border-radius: 99px;
-  padding: 0 12px;
+  padding: 3px 12px;
   color: var(--muted);
   background: rgba(255, 255, 255, 0.52);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-decoration: none;
+  text-align: left;
   white-space: nowrap;
+  cursor: pointer;
 }
 
-.billing-link > span {
+.billing-button > span {
   width: 16px;
   height: 16px;
+  grid-row: 1 / 3;
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -213,13 +212,24 @@ button {
   font-size: 9px;
 }
 
-.billing-link > b {
-  color: #aaa398;
-  font-size: 10px;
-  font-weight: 400;
+.billing-button > b,
+.billing-button > small {
+  grid-column: 2;
 }
 
-.billing-link:hover {
+.billing-button > b {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.billing-button > small {
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
+}
+
+.billing-button:hover {
   color: var(--ink);
   border-color: #aaa398;
   background: rgba(255, 255, 255, 0.82);
@@ -238,7 +248,7 @@ button {
 
 .locale-toggle button:focus-visible,
 .api-key-button:focus-visible,
-.billing-link:focus-visible,
+.billing-button:focus-visible,
 .dialog-close:focus-visible,
 .api-key-dialog input:focus-visible {
   outline: 2px solid var(--vermillion);
@@ -399,6 +409,226 @@ button {
   margin-bottom: 25px;
   color: var(--vermillion);
   font-size: 11px;
+}
+
+.billing-dialog {
+  width: min(780px, calc(100% - 28px));
+}
+
+.billing-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 5px 20px;
+  align-items: end;
+  margin-top: 20px;
+  padding: 18px 20px;
+  color: white;
+  background: var(--ink);
+}
+
+.billing-summary > span {
+  font-size: 11px;
+}
+
+.billing-summary > strong {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: clamp(24px, 5vw, 38px);
+  font-weight: 500;
+}
+
+.billing-summary > small {
+  color: #c8c4bc;
+  font-size: 9px;
+}
+
+.billing-rates {
+  margin-top: 16px;
+  padding: 15px 17px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.billing-rates > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: baseline;
+}
+
+.billing-rates > header strong {
+  font-size: 12px;
+}
+
+.billing-rates > header span,
+.billing-rates > p {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.billing-rates dl,
+.billing-token-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin: 13px 0 0;
+  background: var(--line);
+}
+
+.billing-rates dl > div,
+.billing-token-grid > div {
+  min-width: 0;
+  padding: 10px;
+  background: var(--paper);
+}
+
+.billing-rates dt,
+.billing-token-grid dt {
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.billing-rates dd,
+.billing-token-grid dd {
+  margin: 5px 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.billing-rates > p {
+  margin: 11px 0 0;
+  line-height: 1.55;
+}
+
+.billing-ledger {
+  margin-top: 20px;
+}
+
+.billing-ledger > h3 {
+  margin: 0 0 10px;
+  font-family: "Songti SC", STSong, serif;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.billing-ledger > ol {
+  max-height: 330px;
+  overflow: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.billing-ledger > ol > li {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.billing-ledger li > header {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+}
+
+.billing-ledger li > header > span {
+  color: var(--vermillion);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9px;
+}
+
+.billing-ledger li > header > div:last-child {
+  text-align: right;
+}
+
+.billing-ledger li > header strong,
+.billing-ledger li > header small {
+  display: block;
+}
+
+.billing-ledger li > header strong {
+  font-size: 11px;
+}
+
+.billing-ledger li > header small {
+  max-width: 420px;
+  margin-top: 4px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.billing-token-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 11px;
+}
+
+.billing-token-grid > div {
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.billing-cost-detail {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.billing-cost-detail > dl {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 6px 0 0;
+}
+
+.billing-cost-detail dt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.billing-cost-detail dd {
+  margin: 3px 0 0;
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9px;
+}
+
+.billing-unavailable,
+.billing-empty p {
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.billing-unavailable {
+  margin: 10px 0 0;
+  padding: 9px 11px;
+  background: #fff3de;
+}
+
+.billing-empty {
+  padding: 22px;
+  border: 1px dashed #bdb6aa;
+  text-align: center;
+}
+
+.billing-empty strong {
+  font-size: 12px;
+}
+
+.billing-empty p {
+  margin: 6px auto 0;
+  max-width: 430px;
+}
+
+.billing-actions {
+  margin-top: 20px;
 }
 
 @keyframes dialog-in {
@@ -1228,6 +1458,33 @@ fieldset legend,
     align-items: stretch;
     flex-direction: column-reverse;
     margin-bottom: 20px;
+  }
+
+  .billing-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .billing-summary > strong {
+    grid-row: auto;
+    grid-column: 1;
+  }
+
+  .billing-rates dl,
+  .billing-token-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .billing-ledger li > header {
+    grid-template-columns: 22px minmax(0, 1fr);
+  }
+
+  .billing-ledger li > header > div:last-child {
+    grid-column: 2;
+    text-align: left;
+  }
+
+  .billing-cost-detail > dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .hero {
