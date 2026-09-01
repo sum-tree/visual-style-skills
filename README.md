@@ -9,22 +9,23 @@ APP 位于 `apps/web`，通过 Monorepo 中的 `packages/style-registry` 读取�
 主要能力：
 
 - 多图上传、排序和逐张独立处理。
-- 七种预置风格及黑白／彩色、抽象强度等风格变体。
+- 不同预置风格及黑白／彩色、抽象强度等风格变体。
 - 草稿、标准、高清三档 `gpt-image-2` 画质。
 - 最多两个任务并发，保持输入与结果的稳定顺序。
 - 原图、效果图和最终 PNG 对照图分别预览；效果图与对照图可单独下载。
-- API Key 只存在服务端，不进入浏览器代码。
+- 完整中英文界面，可在右上角即时切换。
+- API Key 可通过服务端环境变量配置，也可在 UI 中建立 8 小时临时内存会话；浏览器只保存不可读的 `HttpOnly` 会话标识，不写入 Key。
 
 本地运行：
 
 ```powershell
 npm install
 Copy-Item apps/web/.env.example apps/web/.env.local
-# 在 apps/web/.env.local 中设置 OPENAI_API_KEY
+# 推荐在 apps/web/.env.local 中设置 OPENAI_API_KEY；也可启动后在 UI 中临时填写
 npm run dev
 ```
 
-默认访问 `http://localhost:3000`。未配置 API Key 时，界面可以正常打开，但生成接口会返回明确的配置提示。
+默认访问 `http://localhost:7777`。未配置 API Key 时，界面可以正常打开；点击生成会引导打开安全连接面板。UI 中提交的 Key 仅保存在当前 Node.js 服务进程内存中，服务重启或会话过期即失效，不会在页面中回显。
 
 验证：
 

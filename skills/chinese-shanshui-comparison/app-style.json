@@ -3,7 +3,9 @@
   "id": "chinese-shanshui-comparison",
   "skillName": "chinese-shanshui-comparison",
   "name": "中国山水画",
+  "nameEn": "Chinese Shanshui",
   "description": "保留空间拓扑，以留白、雾气和虚实重构山水意境。",
+  "descriptionEn": "Reimagines spatial relationships through paper white, mist, and shifting solid–void depth.",
   "accent": ["#353A3B", "#B9B6A7"],
   "defaultVariant": "monochrome",
   "defaultQuality": "medium",
@@ -12,11 +14,13 @@
     {
       "id": "monochrome",
       "label": "黑白水墨",
+      "labelEn": "Monochrome Ink",
       "prompt": "将输入照片转化为黑白写意水墨山水。保留原场景的前中远次序、主要对象身份、相互关系、视觉流向和大致空间区域，但不逐像素描摹摄影轮廓；允许在所属空间层内概括、拉开、压缩、错落或让次要形体融入云雾。以宣纸留白、浓淡墨、干湿笔、渗化边缘和近实远虚塑造飘渺意境，不得只是照片去色、铅笔描边或均匀灰雾。现代车辆、道路或建筑保留身份，可概括为墨线与块面，不古装化。"
     },
     {
       "id": "colored",
       "label": "彩色设色",
+      "labelEn": "Colored Ink",
       "prompt": "将输入照片转化为彩色设色写意山水。保留前中远层级、主要对象身份、相互关系与视觉流向，允许概括山形、岸线、道路和次要纹理以营造疏密、开合与云雾。以墨线、皴擦和墨韵立骨，使用克制的石青、石绿、花青、赭石与少量暖色设色，显露暖宣纸底；色彩不能变成西方透明水彩、莫奈碎笔或高饱和数字插画。现代物体保持身份，不添加古典亭台舟桥。"
     }
   ]

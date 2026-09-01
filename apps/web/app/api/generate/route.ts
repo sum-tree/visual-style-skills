@@ -4,7 +4,13 @@ import {
   type ImageQuality,
 } from "@visual-style/style-registry";
 import sharp from "sharp";
+import { NextRequest } from "next/server";
 import { chooseOpenAiImageSize } from "@/lib/image-size";
+import {
+  API_KEY_SESSION_COOKIE,
+  isTrustedSameOrigin,
+  resolveApiKey,
+} from "@/lib/api-key-session";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,32 +38,49 @@ function bufferToDataUrl(buffer: Buffer, mime = "image/png") {
   return `data:${mime};base64,${buffer.toString("base64")}`;
 }
 
-function apiError(message: string, status: number) {
-  return Response.json({ error: { message } }, { status });
+function apiError(message: string, status: number, code?: string) {
+  return Response.json(
+    { error: { message, code } },
+    { status, headers: { "Cache-Control": "no-store" } },
+  );
 }
 
-export async function POST(request: Request) {
-  const apiKey = process.env.OPENAI_API_KEY?.trim();
+export async function POST(request: NextRequest) {
+  const locale = request.nextUrl.searchParams.get("locale") === "en" ? "en" : "zh";
+  const message = (zh: string, en: string) => (locale === "en" ? en : zh);
+  if (!isTrustedSameOrigin(request)) {
+    return apiError(
+      message("请求来源校验失败。", "Request origin validation failed."),
+      403,
+      "origin_rejected",
+    );
+  }
+  const sessionId = request.cookies.get(API_KEY_SESSION_COOKIE)?.value;
+  const apiKey = resolveApiKey(sessionId).apiKey;
   if (!apiKey) {
-    return apiError("服务端尚未配置 OPENAI_API_KEY。", 503);
+    return apiError(
+      message("请先在页面中安全填写 OpenAI API Key。", "Add an OpenAI API key in Settings first."),
+      503,
+      "api_key_missing",
+    );
   }
 
   let formData: FormData;
   try {
     formData = await request.formData();
   } catch {
-    return apiError("无法读取上传内容。", 400);
+    return apiError(message("无法读取上传内容。", "Unable to read the upload."), 400);
   }
 
   const file = formData.get("image");
   if (!(file instanceof File)) {
-    return apiError("请上传一张图片。", 400);
+    return apiError(message("请上传一张图片。", "Upload one image."), 400);
   }
   if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
-    return apiError("仅支持 JPEG、PNG 和 WebP。", 415);
+    return apiError(message("仅支持 JPEG、PNG 和 WebP。", "Only JPEG, PNG, and WebP are supported."), 415);
   }
   if (file.size === 0 || file.size > MAX_FILE_BYTES) {
-    return apiError("单张图片必须小于 12 MB。", 413);
+    return apiError(message("单张图片必须小于 12 MB。", "Each image must be smaller than 12 MB."), 413);
   }
 
   const styleId = getTextField(formData, "styleId");
@@ -73,7 +96,7 @@ export async function POST(request: Request) {
     compiled = compileStylePrompt({ styleId, variantId, customInstruction });
   } catch (error) {
     return apiError(
-      error instanceof Error ? error.message : "无效的风格配置。",
+      error instanceof Error ? error.message : message("无效的风格配置。", "Invalid style configuration."),
       400,
     );
   }
@@ -94,7 +117,7 @@ export async function POST(request: Request) {
     width = metadata.width;
     height = metadata.height;
   } catch {
-    return apiError("图片文件损坏或无法解码。", 400);
+    return apiError(message("图片文件损坏或无法解码。", "The image is damaged or cannot be decoded."), 400);
   }
 
   let size: ReturnType<typeof chooseOpenAiImageSize>;
@@ -102,7 +125,7 @@ export async function POST(request: Request) {
     size = chooseOpenAiImageSize(width, height);
   } catch (error) {
     return apiError(
-      error instanceof Error ? error.message : "不支持该图片比例。",
+      error instanceof Error ? error.message : message("不支持该图片比例。", "This image aspect ratio is not supported."),
       400,
     );
   }
@@ -142,10 +165,10 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     if (request.signal.aborted) {
-      return apiError("请求已取消。", 499);
+      return apiError(message("请求已取消。", "The request was cancelled."), 499);
     }
     console.error("OpenAI image request failed before response", error);
-    return apiError("暂时无法连接图像生成服务。", 502);
+    return apiError(message("暂时无法连接图像生成服务。", "Unable to reach the image service right now."), 502);
   }
 
   const requestId = openAiResponse.headers.get("x-request-id");
@@ -153,7 +176,7 @@ export async function POST(request: Request) {
   try {
     payload = (await openAiResponse.json()) as OpenAiImageResponse;
   } catch {
-    return apiError("图像服务返回了无法解析的响应。", 502);
+    return apiError(message("图像服务返回了无法解析的响应。", "The image service returned an unreadable response."), 502);
   }
 
   if (!openAiResponse.ok) {
@@ -163,17 +186,17 @@ export async function POST(request: Request) {
       code: payload.error?.code,
       moderationDetails: payload.error?.moderation_details,
     });
-    const message =
+    const errorMessage =
       payload.error?.code === "moderation_blocked"
-        ? "该请求未通过图像安全检查，请调整附加要求或更换图片。"
+        ? message("该请求未通过图像安全检查，请调整附加要求或更换图片。", "The request did not pass image safety checks. Adjust the instruction or use another image.")
         : payload.error?.message ||
           `图像生成失败（HTTP ${openAiResponse.status}）。`;
-    return apiError(message, openAiResponse.status);
+    return apiError(errorMessage, openAiResponse.status);
   }
 
   const encodedEffect = payload.data?.[0]?.b64_json;
   if (!encodedEffect) {
-    return apiError("图像服务没有返回效果图。", 502);
+    return apiError(message("图像服务没有返回效果图。", "The image service did not return an effect image."), 502);
   }
 
   const effect = Buffer.from(encodedEffect, "base64");
@@ -185,7 +208,7 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     return apiError(
-      error instanceof Error ? error.message : "对照图拼版失败。",
+      error instanceof Error ? error.message : message("对照图拼版失败。", "Failed to compose the comparison image."),
       422,
     );
   }
@@ -203,5 +226,5 @@ export async function POST(request: Request) {
     effectDataUrl: bufferToDataUrl(effect),
     comparisonDataUrl: bufferToDataUrl(comparison.buffer),
     comparisonMetadata: comparison.metadata,
-  });
+  }, { headers: { "Cache-Control": "no-store" } });
 }

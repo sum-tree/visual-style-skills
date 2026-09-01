@@ -11,6 +11,7 @@ export type ImageQuality = "low" | "medium" | "high";
 export type StyleVariant = {
   id: string;
   label: string;
+  labelEn: string;
   prompt: string;
 };
 
@@ -19,7 +20,9 @@ export type AppStyleManifest = {
   id: string;
   skillName: string;
   name: string;
+  nameEn: string;
   description: string;
+  descriptionEn: string;
   accent: [string, string];
   defaultVariant: string;
   defaultQuality: ImageQuality;
@@ -52,7 +55,9 @@ function parseManifest(input: unknown, source: string): AppStyleManifest {
     typeof value.id !== "string" ||
     typeof value.skillName !== "string" ||
     typeof value.name !== "string" ||
+    typeof value.nameEn !== "string" ||
     typeof value.description !== "string" ||
+    typeof value.descriptionEn !== "string" ||
     !Array.isArray(value.accent) ||
     value.accent.length !== 2 ||
     typeof value.defaultVariant !== "string" ||
@@ -68,6 +73,7 @@ function parseManifest(input: unknown, source: string): AppStyleManifest {
     if (
       typeof variant?.id !== "string" ||
       typeof variant?.label !== "string" ||
+      typeof variant?.labelEn !== "string" ||
       typeof variant?.prompt !== "string" ||
       !variant.prompt.trim()
     ) {
@@ -94,7 +100,11 @@ if (stylesById.size !== styles.length) {
 export function listPublicStyles(): PublicStyle[] {
   return styles.map((style) => ({
     ...style,
-    variants: style.variants.map(({ id, label }) => ({ id, label })),
+    variants: style.variants.map(({ id, label, labelEn }) => ({
+      id,
+      label,
+      labelEn,
+    })),
   }));
 }
 

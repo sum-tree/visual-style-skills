@@ -3,7 +3,9 @@
   "id": "modern-gongbi-sketch-comparison",
   "skillName": "modern-gongbi-sketch-comparison",
   "name": "现代工笔写生",
+  "nameEn": "Modern Gongbi Sketch",
   "description": "高保真构图、细墨线与克制青绿赭石设色。",
+  "descriptionEn": "Faithful composition, fine ink contours, and restrained blue-green and ochre color.",
   "accent": ["#6E8F85", "#C7A874"],
   "defaultVariant": "default",
   "defaultQuality": "medium",
@@ -12,6 +14,7 @@
     {
       "id": "default",
       "label": "淡彩写生",
+      "labelEn": "Light-Color Study",
       "prompt": "将输入照片转化为现代工笔写生。严格保留画幅方向、裁切、摄影视点、地平线、主体数量和位置、道路与岸线走向、建筑和车辆结构、现代属性及空间层级，不使用散点透视重组场景。以自然纤细墨线、少量皴擦和薄墨建立结构，用淡青绿、花青、橄榄绿、赭石与暖宣纸色克制分染；小纹理可手绘概括，阴影简化为薄墨与平涂。避免大片雾气吞没细节、西方透明水彩、莫奈油画、铅笔素描、动漫和照片滤镜。"
     }
   ]

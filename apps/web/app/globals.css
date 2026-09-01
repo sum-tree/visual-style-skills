@@ -110,12 +110,257 @@ button {
   background: rgba(255, 255, 255, 0.5);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.locale-toggle {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.52);
+}
+
+.locale-toggle button {
+  min-width: 43px;
+  border: 0;
+  border-radius: 99px;
+  padding: 5px 8px;
+  color: var(--muted);
+  background: transparent;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.locale-toggle button.active {
+  color: white;
+  background: var(--ink);
+}
+
+.api-key-button {
+  display: grid;
+  grid-template-columns: 7px auto;
+  align-items: center;
+  column-gap: 7px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 7px 12px;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.52);
+  cursor: pointer;
+}
+
+.api-key-button > span,
+.key-status-card > span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #a5a29a;
+}
+
+.api-key-button.session > span,
+.api-key-button.environment > span,
+.key-status-card.session > span,
+.key-status-card.environment > span {
+  background: #3a8054;
+  box-shadow: 0 0 0 4px rgba(58, 128, 84, 0.1);
+}
+
+.api-key-button.missing > span,
+.key-status-card.missing > span {
+  background: var(--vermillion);
+}
+
+.api-key-button b,
+.api-key-button small {
+  grid-column: 2;
+}
+
+.api-key-button b {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.api-key-button small {
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.locale-toggle button:focus-visible,
+.api-key-button:focus-visible,
+.dialog-close:focus-visible,
+.api-key-dialog input:focus-visible {
+  outline: 2px solid var(--vermillion);
+  outline-offset: 2px;
+}
+
 .live-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: #3a8054;
   box-shadow: 0 0 0 4px rgba(58, 128, 84, 0.12);
+}
+
+.api-key-dialog {
+  width: min(590px, calc(100% - 28px));
+  border: 1px solid #d4cec2;
+  padding: 0;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 0 30px 100px rgba(23, 24, 22, 0.24);
+}
+
+.api-key-dialog::backdrop {
+  background: rgba(23, 24, 22, 0.48);
+  backdrop-filter: blur(4px);
+}
+
+.api-key-dialog[open] {
+  animation: dialog-in 180ms ease-out;
+}
+
+.api-key-dialog > * {
+  margin-inline: 28px;
+}
+
+.dialog-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 28px;
+}
+
+.dialog-heading .eyebrow {
+  margin-bottom: 9px;
+}
+
+.dialog-heading h2 {
+  margin: 0;
+  font-family: "Songti SC", STSong, serif;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.dialog-close {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dialog-security-copy {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.key-status-card {
+  display: grid;
+  grid-template-columns: 9px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  margin-top: 20px;
+  padding: 15px 17px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.key-status-card > span {
+  margin-top: 5px;
+}
+
+.key-status-card strong {
+  font-size: 13px;
+}
+
+.key-status-card p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.api-key-form {
+  display: grid;
+  gap: 17px;
+  margin-top: 20px;
+}
+
+.api-key-form label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.api-key-form input {
+  width: 100%;
+  border: 1px solid #bdb6aa;
+  border-radius: 0;
+  padding: 12px 13px;
+  color: var(--ink);
+  background: white;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-bottom: 28px;
+}
+
+.dialog-actions button {
+  min-width: 112px;
+  border: 1px solid var(--ink);
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.dialog-actions .primary-action {
+  color: white;
+  background: var(--ink);
+}
+
+.dialog-actions .secondary-action {
+  background: transparent;
+}
+
+.dialog-actions .danger {
+  color: #a63b29;
+  border-color: #cf9589;
+}
+
+.dialog-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.key-notice {
+  margin-top: -12px;
+  margin-bottom: 25px;
+  color: var(--vermillion);
+  font-size: 11px;
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
 }
 
 .hero {
@@ -347,6 +592,41 @@ button {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+}
+
+.style-monet-comparison {
+  --accent-a: #7aa8a4;
+  --accent-b: #e7c77a;
+}
+
+.style-picasso-geometric-comparison {
+  --accent-a: #1864c8;
+  --accent-b: #f2492e;
+}
+
+.style-chinese-shanshui-comparison {
+  --accent-a: #353a3b;
+  --accent-b: #b9b6a7;
+}
+
+.style-modern-gongbi-sketch-comparison {
+  --accent-a: #6e8f85;
+  --accent-b: #c7a874;
+}
+
+.style-traditional-expressive-watercolor-comparison {
+  --accent-a: #f3a63b;
+  --accent-b: #d95d86;
+}
+
+.style-modern-minimal-illustration-comparison {
+  --accent-a: #e7b62d;
+  --accent-b: #6b8d61;
+}
+
+.style-wu-guanzhong-expressive-ink-comparison {
+  --accent-a: #1e2222;
+  --accent-b: #e65b32;
 }
 
 .style-card {
@@ -873,6 +1153,36 @@ fieldset legend,
 
   .site-header {
     min-height: 72px;
+    align-items: flex-start;
+    gap: 12px;
+    padding-block: 13px;
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .header-badge {
+    display: none;
+  }
+
+  .brand > span:last-child {
+    display: none;
+  }
+
+  .api-key-dialog > * {
+    margin-inline: 20px;
+  }
+
+  .dialog-heading {
+    margin-top: 20px;
+  }
+
+  .dialog-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+    margin-bottom: 20px;
   }
 
   .hero {

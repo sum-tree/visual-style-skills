@@ -7,7 +7,10 @@ test("loads all seven style presets with valid defaults", () => {
   assert.equal(styles.length, 7);
   assert.equal(new Set(styles.map((style) => style.id)).size, 7);
   for (const style of styles) {
+    assert.ok(style.nameEn);
+    assert.ok(style.descriptionEn);
     assert.ok(style.variants.some((item) => item.id === style.defaultVariant));
+    assert.ok(style.variants.every((item) => item.labelEn));
   }
 });
 

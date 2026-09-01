@@ -3,7 +3,9 @@
   "id": "picasso-geometric-comparison",
   "skillName": "picasso-geometric-comparison",
   "name": "毕加索几何抽象",
+  "nameEn": "Picasso-Inspired Geometric Abstraction",
   "description": "粗黑结构线、少量大色块与正侧面视角叠合。",
+  "descriptionEn": "Bold structural lines, a few large color planes, and layered frontal and profile viewpoints.",
   "accent": ["#1864C8", "#F2492E"],
   "defaultVariant": "medium-high",
   "defaultQuality": "medium",
@@ -12,16 +14,19 @@
     {
       "id": "restrained",
       "label": "克制抽象",
+      "labelEn": "Restrained",
       "prompt": "将输入照片转化为受毕加索 1930 年代具象抽象语言启发的手绘画，但不复制任何具体作品。保留接近原图的外轮廓、主体数量、姿态、位置和识别特征，主要通过少量大色块、粗黑结构线和轻微比例错位表现抽象。使用高纯度而有限的红、黄、蓝、绿、粉与象牙白平涂，避免密集三角网格、低多边形和无法辨认的解构。"
     },
     {
       "id": "medium-high",
       "label": "中高抽象",
+      "labelEn": "Medium–High",
       "prompt": "将输入照片转化为受毕加索 1930 年代具象抽象语言启发的手绘画，但不复制任何具体作品。严格保留画幅、主体数量、姿态、位置、占比和主要关系；以少量大而明确的不规则平面、椭圆、弧形和折线重组主体，允许正面与侧面视角叠合及有目的的错位、旋转、压缩和夸张，但不得增加器官或主体。使用连续醒目的粗黑结构线和 4–7 个高纯度红黄蓝绿粉色块，压平透视，以重叠轮廓组织空间。避免均匀细碎三角镶嵌、低多边形 3D、浑浊棕灰、卡通滤镜和彻底不可辨认的解构。"
     },
     {
       "id": "strong",
       "label": "强烈抽象",
+      "labelEn": "Strong",
       "prompt": "将输入照片转化为受毕加索具象抽象语言启发的强烈几何与曲线融合画，但不复制具体作品。锁定主体数量、位置、姿态与识别锚点，允许更明显地叠合视角、错位内部比例、夸张曲线和色块节奏。使用少量大色面、粗黑结构线和高纯度互补色；仍须立即辨认原主体，不得增生器官、替换对象或变成纯抽象。避免密集三角网格、彩色玻璃、3D 和摄影滤镜。"
     }
   ]

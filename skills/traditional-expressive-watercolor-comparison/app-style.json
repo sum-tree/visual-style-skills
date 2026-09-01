@@ -3,7 +3,9 @@
   "id": "traditional-expressive-watercolor-comparison",
   "skillName": "traditional-expressive-watercolor-comparison",
   "name": "传统意象水彩",
+  "nameEn": "Traditional Expressive Watercolor",
   "description": "高饱和透明湿染、自然流淌沉淀与大片纸白。",
+  "descriptionEn": "Saturated transparent wet washes, natural flow and sediment, with generous paper white.",
   "accent": ["#F3A63B", "#D95D86"],
   "defaultVariant": "default",
   "defaultQuality": "medium",
@@ -12,6 +14,7 @@
     {
       "id": "default",
       "label": "彩虹湿染",
+      "labelEn": "Rainbow Wet Wash",
       "prompt": "将输入照片转化为传统意象透明水彩。先保留主要物体、人物或动物的数量、身份、姿态、位置、遮挡和前中远关系，再把次要纹理松化为湿画色域。大面积显露水彩纸白，使用高饱和透明橙、金黄、黄绿、翠绿、珊瑚粉与玫瑰粉形成连续彩虹湿染，并以少量蓝绿或淡紫灰平衡。必须可见自然晕染、失边、重力流淌、边缘积色、颗粒沉淀、返花与回流水痕；只用少量深靛蓝或焦褐结构线立骨。避免干碎重复点触、莫奈油画、水墨、工笔、数字喷枪、无结构飞溅和浑浊厚重色。"
     }
   ]

@@ -3,7 +3,9 @@
   "id": "modern-minimal-illustration-comparison",
   "skillName": "modern-minimal-illustration-comparison",
   "name": "现代极简插画",
+  "nameEn": "Modern Minimal Illustration",
   "description": "巨大留白、规则色块、浅层分景与微型叙事。",
+  "descriptionEn": "Expansive negative space, controlled shapes, shallow layers, and miniature narrative details.",
   "accent": ["#E7B62D", "#6B8D61"],
   "defaultVariant": "default",
   "defaultQuality": "medium",
@@ -12,6 +14,7 @@
     {
       "id": "default",
       "label": "空灵叙事",
+      "labelEn": "Airy Narrative",
       "prompt": "将输入照片转化为纯净空灵的现代极简叙事插画。保留主要对象数量、身份、方向、相对位置和叙事关系；允许压低地平线、压扁景深、删除重复纹理，但不得添加对象。让一块连续暖白或浅灰留白主导画面，以 2–4 个前后景平面层和 2–6 个圆、椭圆、半圆、圆角矩形或简化坡面概括对象；使用橙、黄、绿等 3–6 个清洁色，边界清楚，渐变只在单个色块内部平滑受控，结构线少、细、稳定。避免水彩晕染、流淌、飞溅、写实三维光影、粗重描边、霓虹渐变和照片纹理。"
     }
   ]
