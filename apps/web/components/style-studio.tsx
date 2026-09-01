@@ -65,6 +65,8 @@ const COPY = {
     returnTop: "返回顶部",
     language: "界面语言",
     apiKey: "API KEY",
+    apiBilling: "API 计费",
+    apiBillingAria: "打开 OpenAI API 计费页面（新窗口）",
     keyLoading: "检查中",
     keyMissing: "未配置",
     keySession: "已安全连接",
@@ -149,6 +151,8 @@ const COPY = {
     returnTop: "Back to top",
     language: "Interface language",
     apiKey: "API KEY",
+    apiBilling: "API BILLING",
+    apiBillingAria: "Open OpenAI API billing in a new tab",
     keyLoading: "Checking",
     keyMissing: "Not configured",
     keySession: "Securely connected",
@@ -626,6 +630,17 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
             <b>{copy.apiKey}</b>
             <small>{apiKeyStatusLabel}</small>
           </button>
+          <a
+            className="billing-link"
+            href="https://platform.openai.com/settings/organization/billing/overview"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={copy.apiBillingAria}
+          >
+            <span aria-hidden="true">$</span>
+            {copy.apiBilling}
+            <b aria-hidden="true">↗</b>
+          </a>
           <div className="header-badge">
             <span className="live-dot" />
             GPT-IMAGE-2
