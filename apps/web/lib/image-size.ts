@@ -1,14 +1,30 @@
-const MAX_EDGE = 1536;
+const MAX_EDGE = 3840;
 const MIN_EDGE = 512;
 const STEP = 16;
 const MAX_RATIO = 3;
 const MAX_ASPECT_ERROR = 0.005;
+const MIN_PIXELS = 655_360;
+const MAX_PIXELS = 8_294_400;
+
+const RESOLUTION_LONG_EDGE = {
+  "1k": 1536,
+  "2k": 2048,
+  "4k": 3840,
+} as const;
+
+const SQUARE_EDGE = {
+  "1k": 1024,
+  "2k": 2048,
+  "4k": 2880,
+} as const;
 
 export type OpenAiImageSize = `${number}x${number}`;
+export type OutputResolution = keyof typeof RESOLUTION_LONG_EDGE;
 
 export function chooseOpenAiImageSize(
   sourceWidth: number,
   sourceHeight: number,
+  resolution: OutputResolution = "1k",
 ): OpenAiImageSize {
   if (
     !Number.isFinite(sourceWidth) ||
@@ -25,10 +41,12 @@ export function chooseOpenAiImageSize(
   }
 
   if (Math.abs(ratio - 1) < 0.01) {
-    return "1024x1024";
+    const edge = SQUARE_EDGE[resolution];
+    return `${edge}x${edge}`;
   }
 
-  for (let longEdge = MAX_EDGE; longEdge >= 1024; longEdge -= STEP) {
+  const targetLongEdge = Math.min(RESOLUTION_LONG_EDGE[resolution], MAX_EDGE);
+  for (let longEdge = targetLongEdge; longEdge >= MIN_EDGE; longEdge -= STEP) {
     const rawShort = longEdge / Math.max(ratio, 1 / ratio);
     const shortEdge = Math.max(
       MIN_EDGE,
@@ -42,8 +60,8 @@ export function chooseOpenAiImageSize(
 
     if (
       aspectError <= MAX_ASPECT_ERROR &&
-      pixels >= 655_360 &&
-      pixels <= 8_294_400
+      pixels >= MIN_PIXELS &&
+      pixels <= MAX_PIXELS
     ) {
       return `${width}x${height}`;
     }

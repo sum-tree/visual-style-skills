@@ -4,6 +4,8 @@ import type {
   ImageQuality,
   PublicStyle,
 } from "@visual-style/style-registry";
+import type { OutputResolution } from "@/lib/image-size";
+import { cancelOutstandingTasks } from "@/lib/generation-state";
 import {
   type ChangeEvent,
   type DragEvent,
@@ -43,18 +45,20 @@ type TaskResult = {
   comparisonDataUrl?: string;
   outputSuffix?: string;
   size?: string;
+  requestId?: string | null;
 };
 
 type GenerateResponse = {
   style: { id: string; name: string; outputSuffix: string };
   variant: { id: string; label: string };
   quality: ImageQuality;
+  resolution: OutputResolution;
   size: string;
   requestId?: string | null;
   effectDataUrl: string;
   comparisonDataUrl: string;
   billing: BillingEstimate;
-  error?: { code?: string; message?: string };
+  error?: { code?: string; message?: string; requestId?: string | null };
 };
 
 type BillingUsage = {
@@ -125,6 +129,8 @@ const COPY = {
     uploadHint: "JPEG、PNG 或 WebP，单张不超过 12 MB",
     drag: "拖拽图片到这里",
     choose: "或点击选择，最多 12 张",
+    windowDropTitle: "松开即可上传图片",
+    windowDropCopy: "支持 JPEG、PNG、WebP；可一次拖入多张",
     rejected: (count: number) => `已忽略 ${count} 个不支持或超过 12 MB 的文件。`,
     maxUploads: "单次最多上传 12 张图片。",
     moveEarlier: "向前移动",
@@ -139,6 +145,8 @@ const COPY = {
     low: "草稿",
     medium: "标准",
     high: "高清",
+    resolution: "输出分辨率",
+    resolutionHint: "保持原图比例；4K 受模型最大像素限制，实际尺寸会显示在结果中",
     primaryPreview: "结果页主预览",
     comparison: "对照成品",
     effectOnly: "仅效果图",
@@ -148,7 +156,8 @@ const COPY = {
     calls: "次生成调用",
     countSummary: (images: number, styles: number) =>
       `${images} 张图片 × ${styles} 种风格`,
-    cancel: "取消任务",
+    stopGeneration: "中止生成",
+    stopping: "正在中止…",
     generate: "开始生成",
     gallery: "输出画廊",
     emptyTitle: "成品将在这里出现",
@@ -166,6 +175,7 @@ const COPY = {
     sourceMissing: "找不到原始上传文件。",
     requestFailed: (status: number) => `请求失败（${status}）`,
     generationFailed: "生成失败。",
+    requestId: "请求 ID",
     status: {
       queued: "等待中",
       generating: "生成中",
@@ -234,6 +244,8 @@ const COPY = {
     uploadHint: "JPEG, PNG, or WebP · up to 12 MB each",
     drag: "Drop images here",
     choose: "or click to choose, up to 12",
+    windowDropTitle: "Release to upload images",
+    windowDropCopy: "JPEG, PNG, and WebP supported · drop multiple files at once",
     rejected: (count: number) => `Ignored ${count} unsupported or oversized file(s).`,
     maxUploads: "You can upload up to 12 images at once.",
     moveEarlier: "Move earlier",
@@ -248,6 +260,9 @@ const COPY = {
     low: "Draft",
     medium: "Standard",
     high: "High",
+    resolution: "Output resolution",
+    resolutionHint:
+      "Preserves source ratio; 4K stays within model pixel limits and the exact size appears in results",
     primaryPreview: "Primary result preview",
     comparison: "Comparison",
     effectOnly: "Effect only",
@@ -257,7 +272,8 @@ const COPY = {
     calls: "generation calls",
     countSummary: (images: number, styles: number) =>
       `${images} image(s) × ${styles} style(s)`,
-    cancel: "Cancel jobs",
+    stopGeneration: "Stop generation",
+    stopping: "Stopping…",
     generate: "Start generating",
     gallery: "Output gallery",
     emptyTitle: "Your artwork will appear here",
@@ -276,6 +292,7 @@ const COPY = {
     sourceMissing: "The original upload is no longer available.",
     requestFailed: (status: number) => `Request failed (${status})`,
     generationFailed: "Generation failed.",
+    requestId: "Request ID",
     status: {
       queued: "Queued",
       generating: "Generating",
@@ -363,12 +380,15 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
     [styles[0].id]: styles[0].defaultVariant,
   }));
   const [quality, setQuality] = useState<ImageQuality>("medium");
+  const [resolution, setResolution] = useState<OutputResolution>("1k");
   const [primaryOutput, setPrimaryOutput] = useState<"comparison" | "effect">(
     "comparison",
   );
   const [customInstruction, setCustomInstruction] = useState("");
   const [results, setResults] = useState<TaskResult[]>([]);
   const [running, setRunning] = useState(false);
+  const [stopping, setStopping] = useState(false);
+  const [isWindowDragging, setIsWindowDragging] = useState(false);
   const [notice, setNotice] = useState("");
   const [apiKeyStatus, setApiKeyStatus] = useState<ApiKeyStatus>("loading");
   const [apiKeyInput, setApiKeyInput] = useState("");
@@ -376,6 +396,7 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
   const [apiKeyBusy, setApiKeyBusy] = useState(false);
   const [billingRecords, setBillingRecords] = useState<BillingRecord[]>([]);
   const abortRef = useRef<AbortController | null>(null);
+  const dragDepthRef = useRef(0);
   const uploadsRef = useRef<UploadItem[]>([]);
   const keyDialogRef = useRef<HTMLDialogElement | null>(null);
   const billingDialogRef = useRef<HTMLDialogElement | null>(null);
@@ -476,6 +497,52 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
     [copy],
   );
 
+  useEffect(() => {
+    const hasFiles = (event: globalThis.DragEvent) =>
+      Array.from(event.dataTransfer?.types ?? []).includes("Files");
+    const onDragEnter = (event: globalThis.DragEvent) => {
+      if (!hasFiles(event)) return;
+      event.preventDefault();
+      dragDepthRef.current += 1;
+      setIsWindowDragging(true);
+    };
+    const onDragOver = (event: globalThis.DragEvent) => {
+      if (!hasFiles(event)) return;
+      event.preventDefault();
+      if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
+    };
+    const clearDragState = () => {
+      dragDepthRef.current = 0;
+      setIsWindowDragging(false);
+    };
+    const onDragLeave = () => {
+      if (dragDepthRef.current === 0) return;
+      dragDepthRef.current = Math.max(0, dragDepthRef.current - 1);
+      if (dragDepthRef.current === 0) setIsWindowDragging(false);
+    };
+    const onWindowDrop = (event: globalThis.DragEvent) => {
+      if (!hasFiles(event)) return;
+      event.preventDefault();
+      clearDragState();
+      addFiles(Array.from(event.dataTransfer?.files ?? []));
+    };
+
+    window.addEventListener("dragenter", onDragEnter);
+    window.addEventListener("dragover", onDragOver);
+    window.addEventListener("dragleave", onDragLeave);
+    window.addEventListener("drop", onWindowDrop);
+    window.addEventListener("dragend", clearDragState);
+    window.addEventListener("blur", clearDragState);
+    return () => {
+      window.removeEventListener("dragenter", onDragEnter);
+      window.removeEventListener("dragover", onDragOver);
+      window.removeEventListener("dragleave", onDragLeave);
+      window.removeEventListener("drop", onWindowDrop);
+      window.removeEventListener("dragend", clearDragState);
+      window.removeEventListener("blur", clearDragState);
+    };
+  }, [addFiles]);
+
   function openKeyDialog() {
     setApiKeyNotice("");
     keyDialogRef.current?.showModal();
@@ -548,6 +615,9 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
 
   function onDrop(event: DragEvent<HTMLLabelElement>) {
     event.preventDefault();
+    event.stopPropagation();
+    dragDepthRef.current = 0;
+    setIsWindowDragging(false);
     addFiles(Array.from(event.dataTransfer.files));
   }
 
@@ -595,12 +665,17 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
       return;
     }
 
-    updateTask(task.id, { status: "generating", error: undefined });
+    updateTask(task.id, {
+      status: "generating",
+      error: undefined,
+      requestId: undefined,
+    });
     const formData = new FormData();
     formData.set("image", source.file);
     formData.set("styleId", task.styleId);
     formData.set("variantId", task.variantId);
     formData.set("quality", quality);
+    formData.set("resolution", resolution);
     formData.set("customInstruction", customInstruction.trim());
 
     try {
@@ -612,6 +687,7 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
       });
       const payload = (await response.json()) as GenerateResponse;
       if (!response.ok) {
+        updateTask(task.id, { requestId: payload.error?.requestId });
         if (payload.error?.code === "api_key_missing") {
           setApiKeyStatus("missing");
           openKeyDialog();
@@ -684,6 +760,7 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
     abortRef.current = controller;
     setResults(tasks);
     setRunning(true);
+    setStopping(false);
     setNotice("");
 
     let cursor = 0;
@@ -698,6 +775,7 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
 
     await Promise.all([worker(), worker()]);
     setRunning(false);
+    setStopping(false);
     abortRef.current = null;
   }
 
@@ -710,14 +788,18 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
     const controller = new AbortController();
     abortRef.current = controller;
     setRunning(true);
+    setStopping(false);
     await executeTask(task, controller.signal);
     setRunning(false);
+    setStopping(false);
     abortRef.current = null;
   }
 
   function cancelGeneration() {
+    if (!running || stopping) return;
+    setStopping(true);
     abortRef.current?.abort();
-    setRunning(false);
+    setResults(cancelOutstandingTasks);
   }
 
   const apiKeyStatusLabel =
@@ -731,6 +813,13 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
 
   return (
     <main className="studio-shell">
+      {isWindowDragging ? (
+        <div className="window-drop-overlay" role="status" aria-live="polite">
+          <span>＋</span>
+          <strong>{copy.windowDropTitle}</strong>
+          <small>{copy.windowDropCopy}</small>
+        </div>
+      ) : null}
       <header className="site-header">
         <a className="brand" href="#top" aria-label={copy.returnTop}>
           <span className="brand-mark">艺</span>
@@ -1213,6 +1302,23 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
                   </button>
                 </div>
               </fieldset>
+              <fieldset className="resolution-field">
+                <legend>{copy.resolution}</legend>
+                <div className="segmented-control resolution-control">
+                  {(["1k", "2k", "4k"] as OutputResolution[]).map((value) => (
+                    <button
+                      type="button"
+                      key={value}
+                      className={resolution === value ? "active" : ""}
+                      onClick={() => setResolution(value)}
+                      aria-pressed={resolution === value}
+                    >
+                      {value.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+                <small className="resolution-hint">{copy.resolutionHint}</small>
+              </fieldset>
             </div>
 
             <label className="instruction-field">
@@ -1233,24 +1339,25 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
                 <span>{copy.calls}</span>
                 <small>{copy.countSummary(uploads.length, selectedStyles.length)}</small>
               </div>
-              {running ? (
-                <button type="button" className="cancel-button" onClick={cancelGeneration}>
-                  {copy.cancel}
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="generate-button"
-                  disabled={
-                    !uploads.length ||
-                    !selectedStyles.length ||
-                    apiKeyStatus === "loading"
-                  }
-                  onClick={generateAll}
-                >
-                  {copy.generate} <span>→</span>
-                </button>
-              )}
+              <button
+                type="button"
+                className={`generate-button${running ? " stopping" : ""}`}
+                disabled={
+                  stopping ||
+                  (!running &&
+                    (!uploads.length ||
+                      !selectedStyles.length ||
+                      apiKeyStatus === "loading"))
+                }
+                onClick={running ? cancelGeneration : generateAll}
+              >
+                {stopping
+                  ? copy.stopping
+                  : running
+                    ? copy.stopGeneration
+                    : copy.generate}{" "}
+                <span>{running ? "■" : "→"}</span>
+              </button>
             </div>
           </div>
         </section>
@@ -1300,6 +1407,9 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
                         <div className="result-error">
                           <strong>{copy.incomplete}</strong>
                           <p>{task.error}</p>
+                          {task.requestId ? (
+                            <small>{copy.requestId}: {task.requestId}</small>
+                          ) : null}
                           <button type="button" onClick={() => retryTask(task)}>
                             {copy.retry}
                           </button>

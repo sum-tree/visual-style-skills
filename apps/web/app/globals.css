@@ -41,6 +41,44 @@ button {
   color: inherit;
 }
 
+.window-drop-overlay {
+  position: fixed;
+  inset: 16px;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  border: 2px dashed var(--vermillion);
+  color: var(--ink);
+  background: rgba(247, 244, 238, 0.93);
+  box-shadow: 0 24px 100px rgba(23, 24, 22, 0.22);
+  backdrop-filter: blur(14px);
+  pointer-events: none;
+}
+
+.window-drop-overlay > span {
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  font-size: 32px;
+}
+
+.window-drop-overlay > strong {
+  margin-top: 8px;
+  font-family: "Songti SC", STSong, serif;
+  font-size: 27px;
+  font-weight: 500;
+}
+
+.window-drop-overlay > small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
 .studio-shell {
   width: min(1540px, 100%);
   margin: 0 auto;
@@ -1040,6 +1078,18 @@ button {
   gap: 16px;
 }
 
+.resolution-field {
+  grid-column: 1 / -1;
+}
+
+.resolution-hint {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.55;
+}
+
 fieldset {
   border: 0;
   padding: 0;
@@ -1129,8 +1179,7 @@ fieldset legend,
   font-size: 9px;
 }
 
-.generate-button,
-.cancel-button {
+.generate-button {
   min-height: 48px;
   border: 0;
   padding: 0 21px;
@@ -1155,14 +1204,17 @@ fieldset legend,
   background: var(--green);
 }
 
+.generate-button.stopping {
+  background: #8d301d;
+}
+
+.generate-button.stopping:hover:not(:disabled) {
+  background: #a63b29;
+}
+
 .generate-button:disabled {
   opacity: 0.34;
   cursor: not-allowed;
-}
-
-.cancel-button {
-  background: #f0dcd5;
-  color: #8d301d;
 }
 
 .result-column {
@@ -1331,9 +1383,17 @@ fieldset legend,
 }
 
 .generating-state small,
-.result-error p {
+.result-error p,
+.result-error small {
   color: var(--muted);
   font-size: 10px;
+}
+
+.result-error small {
+  display: block;
+  margin-top: 7px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
 }
 
 .result-error button {
@@ -1524,8 +1584,7 @@ fieldset legend,
     flex-direction: column;
   }
 
-  .generate-button,
-  .cancel-button {
+  .generate-button {
     width: 100%;
   }
 

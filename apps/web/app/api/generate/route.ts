@@ -5,8 +5,12 @@ import {
 } from "@visual-style/style-registry";
 import sharp from "sharp";
 import { NextRequest } from "next/server";
-import { chooseOpenAiImageSize } from "@/lib/image-size";
+import {
+  chooseOpenAiImageSize,
+  type OutputResolution,
+} from "@/lib/image-size";
 import { estimateGptImage2Cost } from "@/lib/image-billing";
+import { buildOpenAiImageEditForm } from "@/lib/image-request";
 import {
   API_KEY_SESSION_COOKIE,
   isTrustedSameOrigin,
@@ -20,6 +24,7 @@ export const maxDuration = 300;
 const MAX_FILE_BYTES = 12 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const QUALITY_VALUES = new Set<ImageQuality>(["low", "medium", "high"]);
+const RESOLUTION_VALUES = new Set<OutputResolution>(["1k", "2k", "4k"]);
 
 type OpenAiImageResponse = {
   data?: Array<{ b64_json?: string; output_format?: string }>;
@@ -40,9 +45,14 @@ function bufferToDataUrl(buffer: Buffer, mime = "image/png") {
   return `data:${mime};base64,${buffer.toString("base64")}`;
 }
 
-function apiError(message: string, status: number, code?: string) {
+function apiError(
+  message: string,
+  status: number,
+  code?: string,
+  requestId?: string | null,
+) {
   return Response.json(
-    { error: { message, code } },
+    { error: { message, code, requestId } },
     { status, headers: { "Cache-Control": "no-store" } },
   );
 }
@@ -92,6 +102,10 @@ export async function POST(request: NextRequest) {
   const quality: ImageQuality = QUALITY_VALUES.has(qualityValue)
     ? qualityValue
     : "medium";
+  const resolutionValue = getTextField(formData, "resolution") as OutputResolution;
+  const resolution: OutputResolution = RESOLUTION_VALUES.has(resolutionValue)
+    ? resolutionValue
+    : "1k";
 
   let compiled: ReturnType<typeof compileStylePrompt>;
   try {
@@ -124,7 +138,7 @@ export async function POST(request: NextRequest) {
 
   let size: ReturnType<typeof chooseOpenAiImageSize>;
   try {
-    size = chooseOpenAiImageSize(width, height);
+    size = chooseOpenAiImageSize(width, height, resolution);
   } catch (error) {
     return apiError(
       error instanceof Error ? error.message : message("不支持该图片比例。", "This image aspect ratio is not supported."),
@@ -136,7 +150,6 @@ export async function POST(request: NextRequest) {
     process.env.OPENAI_BASE_URL?.trim() || "https://api.openai.com/v1";
   const headers: Record<string, string> = {
     Authorization: `Bearer ${apiKey}`,
-    "Content-Type": "application/json",
   };
   if (process.env.OPENAI_ORG_ID?.trim()) {
     headers["OpenAI-Organization"] = process.env.OPENAI_ORG_ID.trim();
@@ -147,22 +160,19 @@ export async function POST(request: NextRequest) {
 
   let openAiResponse: Response;
   try {
+    const editForm = buildOpenAiImageEditForm({
+      image: normalizedOriginal,
+      prompt: compiled.prompt,
+      size,
+      quality,
+    });
     openAiResponse = await fetch(
       `${endpointBase.replace(/\/$/, "")}/images/edits`,
       {
         method: "POST",
         headers,
         signal: request.signal,
-        body: JSON.stringify({
-          model: "gpt-image-2",
-          prompt: compiled.prompt,
-          images: [{ image_url: bufferToDataUrl(normalizedOriginal) }],
-          size,
-          quality,
-          output_format: "png",
-          moderation: "auto",
-          n: 1,
-        }),
+        body: editForm,
       },
     );
   } catch (error) {
@@ -193,7 +203,12 @@ export async function POST(request: NextRequest) {
         ? message("该请求未通过图像安全检查，请调整附加要求或更换图片。", "The request did not pass image safety checks. Adjust the instruction or use another image.")
         : payload.error?.message ||
           `图像生成失败（HTTP ${openAiResponse.status}）。`;
-    return apiError(errorMessage, openAiResponse.status);
+    return apiError(
+      errorMessage,
+      openAiResponse.status,
+      payload.error?.code,
+      requestId,
+    );
   }
 
   const encodedEffect = payload.data?.[0]?.b64_json;
@@ -223,6 +238,7 @@ export async function POST(request: NextRequest) {
     },
     variant: { id: compiled.variant.id, label: compiled.variant.label },
     quality,
+    resolution,
     size,
     requestId,
     effectDataUrl: bufferToDataUrl(effect),
