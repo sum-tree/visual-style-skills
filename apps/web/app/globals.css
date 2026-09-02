@@ -140,6 +140,7 @@ button {
   height: 34px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   border: 1px solid var(--line);
   border-radius: 99px;
@@ -150,9 +151,19 @@ button {
 }
 
 .header-actions {
+  --header-control-width: 126px;
   display: flex;
   align-items: center;
   gap: 9px;
+}
+
+.locale-toggle,
+.api-key-button,
+.billing-button,
+.header-badge {
+  width: var(--header-control-width);
+  flex: 0 0 var(--header-control-width);
+  box-sizing: border-box;
 }
 
 .locale-toggle {
@@ -165,7 +176,8 @@ button {
 }
 
 .locale-toggle button {
-  min-width: 43px;
+  min-width: 0;
+  flex: 1;
   border: 0;
   border-radius: 99px;
   padding: 5px 8px;
