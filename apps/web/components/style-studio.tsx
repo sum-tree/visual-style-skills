@@ -121,10 +121,10 @@ const COPY = {
     keyMissing: "未配置",
     keySession: "已安全连接",
     keyEnvironment: "服务端已配置",
-    heroLead: "让一张照片，进入",
+    heroLead: "让照片进入",
     heroAccent: "不同艺术语言",
     heroCopy:
-      "上传原图，选择预置风格。模型只生成艺术效果，原图与最终对照版式由程序确定性保留和拼合。",
+      "上传原图并选择预置风格。模型负责生成艺术效果，原图与对照版式由程序原样保留并自动拼合。",
     uploadTitle: "上传原图",
     uploadHint: "JPEG、PNG 或 WebP，单张不超过 12 MB",
     drag: "拖拽图片到这里",
@@ -812,7 +812,7 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
           : copy.keyMissing;
 
   return (
-    <main className="studio-shell">
+    <main className="studio-shell" lang={locale === "zh" ? "zh-CN" : "en"}>
       {isWindowDragging ? (
         <div className="window-drop-overlay" role="status" aria-live="polite">
           <span>＋</span>
