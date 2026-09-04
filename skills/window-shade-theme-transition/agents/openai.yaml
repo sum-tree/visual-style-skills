@@ -1,0 +1,5 @@
+interface:
+  display_name: "舷窗挡板明暗切换"
+  short_description: "以可拖动挡板和连续遮光预览实现无闪烁的明暗主题切换"
+  brand_color: "#5CADF4"
+  default_prompt: "使用 $window-shade-theme-transition 为当前网页实现可拖动舷窗挡板式明暗主题切换。"
