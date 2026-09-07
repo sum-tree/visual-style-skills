@@ -34,16 +34,11 @@ function easeInOutCubic(value: number) {
 
 export function ThemeShadeToggle({ locale }: { locale: "zh" | "en" }) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const veilRef = useRef<HTMLDivElement | null>(null);
   const progressRef = useRef(0);
   const settledThemeRef = useRef<Theme>("light");
-  const previewThemeRef = useRef<Theme>("light");
   const dragRef = useRef<DragState | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const animationTargetRef = useRef<number | null>(null);
-  const themeTransitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  );
   const suppressClickRef = useRef(false);
   const [isDark, setIsDark] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -51,11 +46,10 @@ export function ThemeShadeToggle({ locale }: { locale: "zh" | "en" }) {
   const renderProgress = useCallback((progress: number) => {
     const next = clamp(progress);
     const button = buttonRef.current;
-    const veil = veilRef.current;
     const root = document.documentElement;
-    const previewTheme: Theme = next >= 0.5 ? "dark" : "light";
 
     progressRef.current = next;
+    root.style.setProperty("--theme-progress", String(next));
     button?.style.setProperty("--shade-p", String(next));
     button?.style.setProperty(
       "--shade-offset",
@@ -65,27 +59,6 @@ export function ThemeShadeToggle({ locale }: { locale: "zh" | "en" }) {
       "--shade-brightness",
       String(1 - next * 0.46),
     );
-
-    if (previewThemeRef.current !== previewTheme) {
-      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        root.classList.add("theme-transitioning");
-        if (themeTransitionTimerRef.current !== null) {
-          clearTimeout(themeTransitionTimerRef.current);
-        }
-        themeTransitionTimerRef.current = setTimeout(() => {
-          root.classList.remove("theme-transitioning");
-          themeTransitionTimerRef.current = null;
-        }, 260);
-      }
-
-      if (previewTheme === "dark") root.dataset.theme = "dark";
-      else delete root.dataset.theme;
-      previewThemeRef.current = previewTheme;
-    }
-
-    if (!veil) return;
-    const midpointProximity = 1 - Math.abs(next * 2 - 1);
-    veil.style.opacity = String(midpointProximity * 0.08);
   }, []);
 
   const stopMotion = useCallback(() => {
@@ -94,30 +67,23 @@ export function ThemeShadeToggle({ locale }: { locale: "zh" | "en" }) {
       animationFrameRef.current = null;
     }
     animationTargetRef.current = null;
-    if (themeTransitionTimerRef.current !== null) {
-      clearTimeout(themeTransitionTimerRef.current);
-      themeTransitionTimerRef.current = null;
-    }
-    document.documentElement.classList.remove("theme-transitioning");
   }, []);
 
   const commitTheme = useCallback((target: number) => {
     const theme: Theme = target === 1 ? "dark" : "light";
     const root = document.documentElement;
-    const veil = veilRef.current;
 
     if (theme === "dark") root.dataset.theme = "dark";
     else delete root.dataset.theme;
+    root.style.removeProperty("--theme-progress");
 
     settledThemeRef.current = theme;
-    previewThemeRef.current = theme;
     setIsDark(theme === "dark");
     try {
       localStorage.setItem(THEME_KEY, theme);
     } catch {}
 
     animationTargetRef.current = null;
-    if (veil) veil.style.opacity = "0";
   }, []);
 
   const animateTo = useCallback(
@@ -160,7 +126,6 @@ export function ThemeShadeToggle({ locale }: { locale: "zh" | "en" }) {
       const theme: Theme =
         document.documentElement.dataset.theme === "dark" ? "dark" : "light";
       settledThemeRef.current = theme;
-      previewThemeRef.current = theme;
       setIsDark(theme === "dark");
       renderProgress(theme === "dark" ? 1 : 0);
     });
@@ -168,6 +133,7 @@ export function ThemeShadeToggle({ locale }: { locale: "zh" | "en" }) {
     return () => {
       cancelAnimationFrame(frame);
       stopMotion();
+      document.documentElement.style.removeProperty("--theme-progress");
     };
   }, [renderProgress, stopMotion]);
 
@@ -248,33 +214,30 @@ export function ThemeShadeToggle({ locale }: { locale: "zh" | "en" }) {
         : "Close the window shade and switch to dark theme";
 
   return (
-    <>
-      <div className="theme-veil" ref={veilRef} aria-hidden="true" />
-      <button
-        type="button"
-        ref={buttonRef}
-        className={`theme-shade-toggle${isDragging ? " dragging" : ""}`}
-        aria-label={label}
-        aria-pressed={isDark}
-        title={label}
-        suppressHydrationWarning
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerCancel}
-        onClick={handleClick}
-      >
-        <span className="theme-window" aria-hidden="true">
-          <span className="theme-window-sky" />
-          <span className="theme-window-shade">
-            <i />
-          </span>
-          <span className="theme-window-frame" />
+    <button
+      type="button"
+      ref={buttonRef}
+      className={`theme-shade-toggle${isDragging ? " dragging" : ""}`}
+      aria-label={label}
+      aria-pressed={isDark}
+      title={label}
+      suppressHydrationWarning
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerCancel}
+      onClick={handleClick}
+    >
+      <span className="theme-window" aria-hidden="true">
+        <span className="theme-window-sky" />
+        <span className="theme-window-shade">
+          <i />
         </span>
-        <span className="theme-shade-caption" aria-hidden="true">
-          {locale === "zh" ? "明 · 暗" : "DAY · NIGHT"}
-        </span>
-      </button>
-    </>
+        <span className="theme-window-frame" />
+      </span>
+      <span className="theme-shade-caption" aria-hidden="true">
+        {locale === "zh" ? "明 · 暗" : "DAY · NIGHT"}
+      </span>
+    </button>
   );
 }
