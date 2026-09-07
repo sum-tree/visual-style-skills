@@ -1,6 +1,5 @@
 :root {
-  --theme-veil-light: #f7f4ee;
-  --theme-veil-dark: #151a18;
+  --theme-veil-soft: #68716c;
   --paper: #f7f4ee;
   --paper-deep: #eee9df;
   --ink: #171816;
@@ -262,8 +261,20 @@ button {
   inset: 0;
   z-index: 1200;
   pointer-events: none;
+  background: var(--theme-veil-soft);
   opacity: 0;
   will-change: opacity;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root.theme-transitioning *,
+  :root.theme-transitioning *::before,
+  :root.theme-transitioning *::after {
+    transition-property:
+      color, background-color, border-color, box-shadow, fill, stroke;
+    transition-duration: 240ms;
+    transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  }
 }
 
 .theme-shade-toggle {

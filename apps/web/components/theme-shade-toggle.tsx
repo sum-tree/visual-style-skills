@@ -37,10 +37,13 @@ export function ThemeShadeToggle({ locale }: { locale: "zh" | "en" }) {
   const veilRef = useRef<HTMLDivElement | null>(null);
   const progressRef = useRef(0);
   const settledThemeRef = useRef<Theme>("light");
+  const previewThemeRef = useRef<Theme>("light");
   const dragRef = useRef<DragState | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const animationTargetRef = useRef<number | null>(null);
-  const veilTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const themeTransitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const suppressClickRef = useRef(false);
   const [isDark, setIsDark] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -49,6 +52,8 @@ export function ThemeShadeToggle({ locale }: { locale: "zh" | "en" }) {
     const next = clamp(progress);
     const button = buttonRef.current;
     const veil = veilRef.current;
+    const root = document.documentElement;
+    const previewTheme: Theme = next >= 0.5 ? "dark" : "light";
 
     progressRef.current = next;
     button?.style.setProperty("--shade-p", String(next));
@@ -61,15 +66,26 @@ export function ThemeShadeToggle({ locale }: { locale: "zh" | "en" }) {
       String(1 - next * 0.46),
     );
 
+    if (previewThemeRef.current !== previewTheme) {
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        root.classList.add("theme-transitioning");
+        if (themeTransitionTimerRef.current !== null) {
+          clearTimeout(themeTransitionTimerRef.current);
+        }
+        themeTransitionTimerRef.current = setTimeout(() => {
+          root.classList.remove("theme-transitioning");
+          themeTransitionTimerRef.current = null;
+        }, 260);
+      }
+
+      if (previewTheme === "dark") root.dataset.theme = "dark";
+      else delete root.dataset.theme;
+      previewThemeRef.current = previewTheme;
+    }
+
     if (!veil) return;
-    const settledTheme = settledThemeRef.current;
-    veil.style.backgroundColor =
-      settledTheme === "light"
-        ? "var(--theme-veil-dark)"
-        : "var(--theme-veil-light)";
-    veil.style.opacity = String(
-      settledTheme === "light" ? next : 1 - next,
-    );
+    const midpointProximity = 1 - Math.abs(next * 2 - 1);
+    veil.style.opacity = String(midpointProximity * 0.08);
   }, []);
 
   const stopMotion = useCallback(() => {
@@ -78,13 +94,11 @@ export function ThemeShadeToggle({ locale }: { locale: "zh" | "en" }) {
       animationFrameRef.current = null;
     }
     animationTargetRef.current = null;
-    if (veilTimerRef.current !== null) {
-      clearTimeout(veilTimerRef.current);
-      veilTimerRef.current = null;
+    if (themeTransitionTimerRef.current !== null) {
+      clearTimeout(themeTransitionTimerRef.current);
+      themeTransitionTimerRef.current = null;
     }
-    if (veilRef.current) {
-      veilRef.current.style.transition = "none";
-    }
+    document.documentElement.classList.remove("theme-transitioning");
   }, []);
 
   const commitTheme = useCallback((target: number) => {
@@ -96,23 +110,14 @@ export function ThemeShadeToggle({ locale }: { locale: "zh" | "en" }) {
     else delete root.dataset.theme;
 
     settledThemeRef.current = theme;
+    previewThemeRef.current = theme;
     setIsDark(theme === "dark");
     try {
       localStorage.setItem(THEME_KEY, theme);
     } catch {}
 
     animationTargetRef.current = null;
-    if (!veil) return;
-
-    requestAnimationFrame(() => {
-      veil.style.transition =
-        "opacity 300ms cubic-bezier(0.23, 1, 0.32, 1)";
-      veil.style.opacity = "0";
-      veilTimerRef.current = setTimeout(() => {
-        if (veilRef.current) veilRef.current.style.transition = "none";
-        veilTimerRef.current = null;
-      }, 340);
-    });
+    if (veil) veil.style.opacity = "0";
   }, []);
 
   const animateTo = useCallback(
@@ -155,6 +160,7 @@ export function ThemeShadeToggle({ locale }: { locale: "zh" | "en" }) {
       const theme: Theme =
         document.documentElement.dataset.theme === "dark" ? "dark" : "light";
       settledThemeRef.current = theme;
+      previewThemeRef.current = theme;
       setIsDark(theme === "dark");
       renderProgress(theme === "dark" ? 1 : 0);
     });

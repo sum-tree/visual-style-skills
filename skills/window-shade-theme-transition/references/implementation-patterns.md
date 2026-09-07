@@ -2,36 +2,38 @@
 
 只在需要写代码、排查闪屏或校准手感时读取本页。以下是框架无关的参考模型；适配目标项目的状态管理和命名，不要机械新增第二套主题系统。
 
-## 三类状态
+## 四类状态
 
 - `progress`：连续挡板进度 `0…1`，只负责即时视觉反馈。
+- `previewTheme`：拖动时实际呈现在 DOM 上的主题，可在中点附近切换，并用短 CSS transition 柔化令牌变化。
 - `settledTheme`：已提交的离散主题 `light | dark`，负责语义令牌和持久化。
 - `phase`：`idle | dragging | settling | committing`，用于打断动画、防止重复 click 和清理资源。
 
-不要把 `progress > 0.5` 直接等同于当前主题。拖动到 49% 与 51% 都应仍是同一套稳定令牌，直到吸附真正到达 `0` 或 `1`。
+不要把 `previewTheme` 当作已经保存的主题。拖过中点可以实时预览另一套令牌，但只有吸附真正到达 `0` 或 `1` 才更新 `settledTheme` 与持久化偏好。
 
-## 色幕公式
+## 预览与柔化公式
 
 设 `p=0` 为亮端点，`p=1` 为暗端点：
 
 ```text
-settledTheme = light: veilColor = darkBackground, veilOpacity = p
-settledTheme = dark:  veilColor = lightBackground, veilOpacity = 1 - p
+previewTheme = p < 0.5 ? light : dark
+veilOpacity = 2 * min(p, 1 - p) * MAX_VEIL_OPACITY
 ```
 
-色幕固定定位、覆盖视口、不可接收指针，并处于页面内容之上、机械控件之下。拖动时取消色幕自身 transition，直接更新 opacity。
+`MAX_VEIL_OPACITY` 只取足以柔化中点换色的低值，并以真实页面验证正文与控件始终可读；普通产品 UI 可从 `0.06…0.12` 开始校准。色幕固定定位、覆盖视口、不可接收指针，并处于页面内容之上、机械控件之下。两个端点的色幕透明度必须为 `0`。
+
+预览主题跨过中点时切换 `data-theme`／class，并只对 `color`、`background-color`、`border-color`、`box-shadow`、`fill` 和 `stroke` 使用约 180–280 ms 的短过渡。若指针在中点附近抖动，可使用约 45%／55% 的轻量迟滞避免反复切换。不要对布局尺寸或挡板 transform 增加主题过渡。
 
 端点提交顺序：
 
 ```text
-1. 吸附动画抵达目标端点。
-2. 确认色幕在目标背景色上接近完全不透明。
-3. 提交 data-theme／class／ThemeProvider 状态并保存偏好。
-4. 下一帧把色幕 opacity 缓动到 0。
-5. 淡出完成后清除临时 transition、phase 与内联值。
+1. 吸附动画抵达目标端点，此时 DOM 已呈现目标预览主题。
+2. 确认色幕 opacity 为 `0`，页面正文、表面和控件可见。
+3. 将目标写入 `settledTheme` 并保存偏好。
+4. 清除临时 transition class、phase 与无用内联值。
 ```
 
-若目标项目让 ThemeProvider 异步提交，可等待 DOM 上的主题标记真实变化后再淡出，不能只等待任意固定延时。
+若目标项目让 ThemeProvider 异步提交，必须让其在拖动到暗端点前完成可见主题更新；不能用全黑遮罩掩盖任意固定延时。
 
 ## 指针状态机
 
@@ -97,7 +99,7 @@ onClick() {
 }
 ```
 
-在 React、Vue 或 Svelte 中，连续进度可保存在 ref／局部可变状态并直接写 CSS 变量；只在可访问名称或稳定主题变化时触发框架状态更新。不要逐帧查询大量 `getComputedStyle`，端点背景色可在拖动开始时读取一次。
+在 React、Vue 或 Svelte 中，连续进度可保存在 ref／局部可变状态并直接写 CSS 变量；只在预览主题跨过阈值、可访问名称或稳定主题变化时触发离散更新。不要逐帧查询大量 `getComputedStyle`，也不要在每个指针帧重渲染整页组件树。
 
 ## 首屏恢复
 
@@ -123,7 +125,7 @@ try {
 
 至少检查：
 
-1. 亮端点、50% 中间态、暗端点截图；中间态色幕透明度与挡板位置方向一致。
+1. 亮端点、50% 中间态、暗端点截图；中间态内容仍清晰，两个端点色幕透明度均为 `0`，按住暗端点时已经能看到完整暗色 UI。
 2. 阈值前后释放、快速反向拖动、拖动中再输入、pointer cancel、组件卸载。
 3. 点击、Enter、Space、清晰焦点环和状态名称变化。
 4. 刷新恢复暗主题且首帧无亮闪；localStorage 禁用时仍能切换。
