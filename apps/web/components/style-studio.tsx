@@ -6,6 +6,7 @@ import type {
 } from "@visual-style/style-registry";
 import type { OutputResolution } from "@/lib/image-size";
 import { cancelOutstandingTasks } from "@/lib/generation-state";
+import { ThemeShadeToggle } from "@/components/theme-shade-toggle";
 import {
   type ChangeEvent,
   type DragEvent,
@@ -829,6 +830,7 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
           </span>
         </a>
         <div className="header-actions">
+          <ThemeShadeToggle locale={locale} />
           <div className="locale-toggle" role="group" aria-label={copy.language}>
             <button
               type="button"
