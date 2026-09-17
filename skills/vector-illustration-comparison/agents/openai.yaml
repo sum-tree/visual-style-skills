@@ -1,0 +1,7 @@
+interface:
+  display_name: "矢量插画风对照图"
+  short_description: "将照片重构为柔和蓝系、平涂色块、浅层场景与编辑式留白的高级矢量插画"
+  brand_color: "#F7F4EE"
+  default_prompt: "使用 $vector-illustration-comparison 按上传顺序处理全部图片，并输出一图一张的矢量插画风对照 PNG。"
+policy:
+  allow_implicit_invocation: true

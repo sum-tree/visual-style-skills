@@ -1,5 +1,7 @@
+import artPostcard from "../../../skills/art-postcard-comparison/app-style.json";
 import chineseShanshui from "../../../skills/chinese-shanshui-comparison/app-style.json";
 import inkLineCharacter from "../../../skills/ink-line-character-comparison/app-style.json";
+import layeredPapercraft from "../../../skills/layered-papercraft-comparison/app-style.json";
 import modernGongbi from "../../../skills/modern-gongbi-sketch-comparison/app-style.json";
 import modernMinimal from "../../../skills/modern-minimal-illustration-comparison/app-style.json";
 import monet from "../../../skills/monet-comparison/app-style.json";
@@ -7,6 +9,8 @@ import paperCutCollage from "../../../skills/paper-cut-collage-comparison/app-st
 import picasso from "../../../skills/picasso-geometric-comparison/app-style.json";
 import porcelainShard from "../../../skills/porcelain-shard-comparison/app-style.json";
 import traditionalWatercolor from "../../../skills/traditional-expressive-watercolor-comparison/app-style.json";
+import travelPoster from "../../../skills/travel-poster-comparison/app-style.json";
+import vectorIllustration from "../../../skills/vector-illustration-comparison/app-style.json";
 import wuGuanzhong from "../../../skills/wu-guanzhong-expressive-ink-comparison/app-style.json";
 
 export type ImageQuality = "low" | "medium" | "high";
@@ -51,6 +55,10 @@ const manifests: Array<{ source: string; value: unknown }> = [
   { source: "porcelain-shard-comparison", value: porcelainShard },
   { source: "ink-line-character-comparison", value: inkLineCharacter },
   { source: "paper-cut-collage-comparison", value: paperCutCollage },
+  { source: "travel-poster-comparison", value: travelPoster },
+  { source: "vector-illustration-comparison", value: vectorIllustration },
+  { source: "layered-papercraft-comparison", value: layeredPapercraft },
+  { source: "art-postcard-comparison", value: artPostcard },
 ];
 
 function parseManifest(input: unknown, source: string): AppStyleManifest {
@@ -142,7 +150,7 @@ export function compileStylePrompt(options: {
       ? `Additional user instruction, apply only when consistent with this preset: ${customInstruction}`
       : "",
     "Preserve the original aspect ratio and crop direction. Keep every major subject tied to the source: preserve its identity or type, count, pose or direction, general position, occlusion order, and the main spatial relationships required by this preset. Do not add unrelated objects or merge content from other images.",
-    "Generate only one standalone stylized effect image that fills the complete source frame. Do not create a comparison layout, border, title, caption, numbering, signature, watermark, logo, seal, frame, or any text not already required by the source scene.",
+    "Generate only one standalone stylized effect image that fills the complete source frame. Do not create a comparison layout, border, title, caption, numbering, signature, watermark, logo, seal, frame, or other text unless it is explicitly required by the selected style preset or by the user's instruction.",
   ]
     .filter(Boolean)
     .join("\n\n");

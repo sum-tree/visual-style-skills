@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "layered-papercraft-comparison",
+  "skillName": "layered-papercraft-comparison",
+  "name": "立体剪纸风",
+  "nameEn": "Layered Papercraft",
+  "description": "以层叠纸张、微缩景观基座、柔和阴影和大面积留白，将照片重构为高级立体纸艺场景。",
+  "descriptionEn": "Rebuilds photos as premium layered papercraft dioramas with handcrafted paper depth, floating scenic bases, soft shadows, and gallery-like negative space.",
+  "accent": ["#E7E1D6", "#B5C8CD"],
+  "defaultVariant": "miniature-diorama",
+  "defaultQuality": "medium",
+  "outputSuffix": "layered_papercraft_comparison",
+  "variants": [
+    {
+      "id": "miniature-diorama",
+      "label": "微缩纸艺",
+      "labelEn": "Miniature Diorama",
+      "prompt": "将输入图像转化为高级立体剪纸风微缩场景。保留主体身份、数量、姿态、朝向、关键轮廓和主要叙事关系，但把主体及少量环境元素重构为层叠纸张、卡纸与轻盈景观基座组成的 miniature 3D papercraft diorama。主体必须一眼可辨；辅助元素只保留 2–5 个与原图真实相关的场景线索。强调纸层厚度、切边、轻微毛边、柔和手工误差、漫射光和细腻阴影，呈现 macro photography 式近距离质感。综合色柔和、通透、略去饱和，以浅粉蓝、雾蓝、天空蓝、象牙白、奶油白、浅米色、灰绿和建筑中性色为主，并仅以少量 dusty rose 或克制暖色点缀。背景保持干净浅色，大面积留白。禁止塑料 3D、儿童手工感、玩具摆件感、复杂拥挤背景、厚重阴影、品牌 Logo 和乱码文字。默认不添加文字。"
+    }
+  ]
+}

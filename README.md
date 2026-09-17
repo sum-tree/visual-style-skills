@@ -49,6 +49,10 @@ npm run check
 | `porcelain-shard-comparison` | 不规则瓷片、真实釉面断口与瓷白留白 | `使用 $porcelain-shard-comparison 按陶瓷碎片风处理全部图片` |
 | `ink-line-character-comparison` | 动物化转译、书法墨线、大留白与少量点色 | `使用 $ink-line-character-comparison 按线墨角色风处理全部图片` |
 | `paper-cut-collage-comparison` | 新民艺剪纸色块、版画颗粒与编辑式留白 | `使用 $paper-cut-collage-comparison 按剪纸拼贴风处理全部图片` |
+| `travel-poster-comparison` | 撕裂照片、半色调、ASCII 字符场与档案技术线 | `使用 $travel-poster-comparison 按旅行海报风处理全部图片` |
+| `vector-illustration-comparison` | 柔和蓝系、平涂色块与浅层旅行场景 | `使用 $vector-illustration-comparison 按矢量插画风处理全部图片` |
+| `layered-papercraft-comparison` | 层叠纸张、微缩景观基座、柔和阴影与大留白 | `使用 $layered-papercraft-comparison 按立体剪纸风处理全部图片` |
+| `art-postcard-comparison` | 象牙白旧纸、小型丝网印刷插画、邮戳与大量留白 | `使用 $art-postcard-comparison 按艺术明信片风处理全部图片` |
 
 ## 使用方式
 

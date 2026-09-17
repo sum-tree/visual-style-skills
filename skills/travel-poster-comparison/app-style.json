@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "travel-poster-comparison",
+  "skillName": "travel-poster-comparison",
+  "name": "旅行海报风",
+  "nameEn": "Archival Travel Poster",
+  "description": "撕裂照片、半色调、ASCII 字符场与技术构造线融合成暖旧纸档案旅行海报。",
+  "descriptionEn": "Rebuilds travel subjects with torn photo fragments, halftone, sparse ASCII fields, drafting lines, aged paper, and restrained red accents.",
+  "accent": ["#B8A68D", "#B84A3A"],
+  "defaultVariant": "archive-study",
+  "defaultQuality": "medium",
+  "outputSuffix": "travel_poster_comparison",
+  "variants": [
+    {
+      "id": "archive-study",
+      "label": "档案研究",
+      "labelEn": "Archive Study",
+      "prompt": "将输入图像转化为高端档案式旅行海报效果图。严格保留主体身份、比例、主轮廓、关键结构、朝向和主要透视，不拉伸、不扭曲、不重新设计。以暖灰或米白旧纸为背景，使用撕裂照片碎片保留主体最重要的结构，让外围纹理逐渐分解为黑色影印半色调点、印刷颗粒、稀疏固定宽度 ASCII 字符场以及细薄的技术构造线、圆弧、基准十字和少量裁切标记。ASCII 只用于外围轮廓和密度纹理，不得虚构窗户、门、岩层、结构件或技术数据。保留原图 1–3 个最具识别性的柔和综合色，以暖旧纸、黑墨、主体综合色和一个极小红色校准强调构成综合色体系。让约四分之一到三分之一画面保持安静纸面留白。避免纯黑终端、密集代码墙、赛博朋克霓虹、过度 ASCII、假技术规格、乱码、3D、Logo、二维码、水印和旅游广告陈词滥调。默认不添加文字。"
+    }
+  ]
+}

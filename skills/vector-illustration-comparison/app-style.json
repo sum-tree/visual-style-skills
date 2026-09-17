@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "vector-illustration-comparison",
+  "skillName": "vector-illustration-comparison",
+  "name": "矢量插画风",
+  "nameEn": "Minimal Flat Vector",
+  "description": "以柔和蓝系、平涂色块、统一线重和浅层场景，将照片重构为高级旅行与生活方式矢量插画。",
+  "descriptionEn": "Rebuilds photos as premium flat-vector travel and lifestyle illustrations with soft blue palettes, clean shapes, restrained details, and airy scene composition.",
+  "accent": ["#A9CFE3", "#D7A6A3"],
+  "defaultVariant": "airy-travel",
+  "defaultQuality": "medium",
+  "outputSuffix": "vector_illustration_comparison",
+  "variants": [
+    {
+      "id": "airy-travel",
+      "label": "清新旅行",
+      "labelEn": "Airy Travel",
+      "prompt": "将输入图像转化为高级极简扁平矢量场景插画。保留主体身份、数量、姿态、朝向、关键轮廓和主要叙事关系，但删除照片级纹理、杂乱背景与低价值细节；根据原图选择一个明确主视觉焦点，并只保留 2–4 个真正有助于说明地点、对象或生活状态的辅助元素。用简洁几何形、柔和轮廓、统一细线重、平涂色块和 2–3 层浅空间重构场景，综合色柔和、通透、略去饱和，以浅粉蓝、雾蓝、天空蓝或空气感冷蓝为主氛围，并以象牙白、奶油白、浅米色、灰绿和建筑中性色平衡；保留必要身份色，仅用极少 dusty rose / muted blush 点缀。禁止综合色渐变、真实光影、水彩、纸纹、复杂笔触、粗黑描边、拥挤背景、卡通贴纸、3D 和模板化旅行装饰。默认不添加文字。"
+    }
+  ]
+}

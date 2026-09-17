@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "art-postcard-comparison",
+  "skillName": "art-postcard-comparison",
+  "name": "艺术明信片风",
+  "nameEn": "Art Postcard",
+  "description": "象牙白旧纸、小尺度丝网印刷插画、2–4 色克制配色、单枚蓝黑邮戳与大量留白。",
+  "descriptionEn": "Ivory paper, small screen-print illustration, restrained 2–4 color palette, a single blue-black postmark, and generous editorial negative space.",
+  "accent": ["#D7D0BF", "#334B63"],
+  "defaultVariant": "editorial-postcard",
+  "defaultQuality": "medium",
+  "outputSuffix": "art_postcard_comparison",
+  "variants": [
+    {
+      "id": "editorial-postcard",
+      "label": "复古艺术卡片",
+      "labelEn": "Editorial Postcard",
+      "prompt": "将输入图像转化为高级艺术明信片风的复古丝网印刷插画。保持主体身份、数量、姿态、方向、主轮廓和关键叙事关系，但删除照片级纹理与低价值背景细节；将主体压缩为小尺度、无边框、清晰可辨的 screen-print / low-fi print illustration。背景使用象牙白或暖白旧纸并保留大量连续留白，插画通常只占画面高度约 30%–55%。从原图提炼并限制为 2–4 种克制、略去饱和的印刷色，加入轻微丝网颗粒、细小半色调、少量掉墨和极轻套印偏差，但不要脏乱。允许最多一枚低调磨损的蓝黑圆形邮戳用于版式平衡，不添加邮票、额外印章、二维码、Logo、水印、外边框、卷角或厚重投影。默认不添加文字；只有用户提供可靠标题、地点或日期时才以小号复古打字机式排版加入。禁止照片滤镜、平滑企业矢量、水彩、3D 样机和商业旅游海报模板。"
+    }
+  ]
+}

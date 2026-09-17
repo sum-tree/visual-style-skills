@@ -1,0 +1,7 @@
+interface:
+  display_name: "旅行海报风对照图"
+  short_description: "将建筑、地标和旅行照片重构为半色调、ASCII、旧纸与档案技术线融合的旅行海报"
+  brand_color: "#F7F4EE"
+  default_prompt: "使用 $travel-poster-comparison 按上传顺序处理全部图片，并输出一图一张的旅行海报风对照 PNG。"
+policy:
+  allow_implicit_invocation: true
