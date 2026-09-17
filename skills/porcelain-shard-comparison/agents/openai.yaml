@@ -1,0 +1,7 @@
+interface:
+  display_name: "陶瓷碎片风对照图"
+  short_description: "逐张将照片重构为不规则瓷器碎片艺术，并输出真实原图与效果图的一对一高清对照 PNG"
+  brand_color: "#F1ECE2"
+  default_prompt: "使用 $porcelain-shard-comparison 按上传顺序处理全部图片，并输出一图一张的陶瓷碎片风对照 PNG。"
+policy:
+  allow_implicit_invocation: true

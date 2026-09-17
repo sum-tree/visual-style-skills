@@ -1,0 +1,7 @@
+interface:
+  display_name: "线墨角色风对照图"
+  short_description: "将照片或任意主体动物化转译为书法墨线、留白与少量朱红点色的极简角色"
+  brand_color: "#F7F4EE"
+  default_prompt: "使用 $ink-line-character-comparison 按上传顺序处理全部图片，并输出一图一张的线墨角色风对照 PNG。"
+policy:
+  allow_implicit_invocation: true

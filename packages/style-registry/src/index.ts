@@ -1,8 +1,11 @@
 import chineseShanshui from "../../../skills/chinese-shanshui-comparison/app-style.json";
+import inkLineCharacter from "../../../skills/ink-line-character-comparison/app-style.json";
 import modernGongbi from "../../../skills/modern-gongbi-sketch-comparison/app-style.json";
 import modernMinimal from "../../../skills/modern-minimal-illustration-comparison/app-style.json";
 import monet from "../../../skills/monet-comparison/app-style.json";
+import paperCutCollage from "../../../skills/paper-cut-collage-comparison/app-style.json";
 import picasso from "../../../skills/picasso-geometric-comparison/app-style.json";
+import porcelainShard from "../../../skills/porcelain-shard-comparison/app-style.json";
 import traditionalWatercolor from "../../../skills/traditional-expressive-watercolor-comparison/app-style.json";
 import wuGuanzhong from "../../../skills/wu-guanzhong-expressive-ink-comparison/app-style.json";
 
@@ -45,6 +48,9 @@ const manifests: Array<{ source: string; value: unknown }> = [
   },
   { source: "modern-minimal-illustration-comparison", value: modernMinimal },
   { source: "wu-guanzhong-expressive-ink-comparison", value: wuGuanzhong },
+  { source: "porcelain-shard-comparison", value: porcelainShard },
+  { source: "ink-line-character-comparison", value: inkLineCharacter },
+  { source: "paper-cut-collage-comparison", value: paperCutCollage },
 ];
 
 function parseManifest(input: unknown, source: string): AppStyleManifest {

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "ink-line-character-comparison",
+  "skillName": "ink-line-character-comparison",
+  "name": "线墨角色风",
+  "nameEn": "Ink-Line Character",
+  "description": "先提炼来源身份，再动物化转译为大留白、书法墨线与少量点色的极简角色。",
+  "descriptionEn": "Extracts source identity cues, then transmutes them into an animal character with calligraphic ink, negative space, and restrained accent color.",
+  "accent": ["#2F2D2A", "#B94B4B"],
+  "defaultVariant": "default",
+  "defaultQuality": "medium",
+  "outputSuffix": "ink_line_character_comparison",
+  "variants": [
+    {
+      "id": "default",
+      "label": "墨黑朱红",
+      "labelEn": "Ink & Vermilion",
+      "prompt": "将输入图像先做识别信息提炼，再转译成完整的动物化角色，而不是直接照画原物。保留来源最关键的轮廓、结构、姿态、气质、装饰、身份符号和综合色记忆，并把它们转成动物的耳、尾、喙、须、爪、羽、角、鬃毛、背线、负形或少量配饰；动物种类应根据来源特征选择，不要默认全部猫化。采用白色或暖白纸面、大面积留白、单体极简构图，以有提按变化和自然断续的书法性墨线、单笔轮廓、简化剪影、干笔飞白和黑白负形塑造角色。综合色以墨黑与纸白为主，仅用极少量朱红点在眼、耳尖、腮、嘴、爪、冠饰或一个关键识别点。允许夸张耳、尾、脖颈和身体比例以增强灵动、机智、幽默和禅意，但必须保持转译后的神似。禁止复杂场景、写实毛发、真实三维光影、综合色厚涂、机械矢量描边、卡通贴纸感、3D 塑料感，以及任何新增文字、Logo、签名、水印或品牌标识。"
+    }
+  ]
+}

@@ -46,6 +46,9 @@ npm run check
 | `traditional-expressive-watercolor-comparison` | 大片纸白、透明色团、结构线与受控飞溅 | `使用 $traditional-expressive-watercolor-comparison 按传统意象水彩处理全部图片` |
 | `modern-minimal-illustration-comparison` | 巨大留白、规则色块、浅层叙事与受控渐变 | `使用 $modern-minimal-illustration-comparison 按现代极简插画处理全部图片` |
 | `wu-guanzhong-expressive-ink-comparison` | 黑白灰构成、书写性墨线与高纯度彩点 | `使用 $wu-guanzhong-expressive-ink-comparison 按吴冠中写意水墨处理全部图片` |
+| `porcelain-shard-comparison` | 不规则瓷片、真实釉面断口与瓷白留白 | `使用 $porcelain-shard-comparison 按陶瓷碎片风处理全部图片` |
+| `ink-line-character-comparison` | 动物化转译、书法墨线、大留白与少量点色 | `使用 $ink-line-character-comparison 按线墨角色风处理全部图片` |
+| `paper-cut-collage-comparison` | 新民艺剪纸色块、版画颗粒与编辑式留白 | `使用 $paper-cut-collage-comparison 按剪纸拼贴风处理全部图片` |
 
 ## 使用方式
 

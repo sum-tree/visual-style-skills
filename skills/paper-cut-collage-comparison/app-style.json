@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "paper-cut-collage-comparison",
+  "skillName": "paper-cut-collage-comparison",
+  "name": "剪纸拼贴风",
+  "nameEn": "Paper-Cut Collage",
+  "description": "以新民艺纸艺、版画颗粒和大留白，将照片重构为克制明快的平面拼贴插画。",
+  "descriptionEn": "Rebuilds photos as restrained, bright paper-cut collage illustrations with folk-art flat shapes, print texture, and generous negative space.",
+  "accent": ["#D0A13A", "#596C78"],
+  "defaultVariant": "default",
+  "defaultQuality": "medium",
+  "outputSuffix": "paper_cut_collage_comparison",
+  "variants": [
+    {
+      "id": "default",
+      "label": "新民艺拼贴",
+      "labelEn": "Folk Modern Collage",
+      "prompt": "将输入图像转化为新民艺剪纸拼贴风的扁平插画。保留主要主体的数量、身份、轮廓、姿态方向、相对位置和关键叙事关系，但删除无关细节与重复纹理；把主体、植物、建筑、动物、器物和少量环境元素重构为独立彩纸般的剪影、几何块面、刻线、负形和少量层叠。背景使用米白或暖白纸色并留出充足留白。综合色从原图提炼为 2–4 种鲜明但克制的平面色块，形成主色、辅助色和少量点睛色；可轻微提纯提亮，但不要灰脏、过饱和或杂乱。材质应有手工剪切边缘、轻微版画颗粒、纸张纤维、少量掉墨和极轻套印偏差，但不要光滑矢量、真实三维光影、复杂透视、3D 渲染、照片滤镜或卡通贴纸感。默认不添加任何文字、标题、编号、签名、印章、Logo、水印或装饰边框。"
+    }
+  ]
+}

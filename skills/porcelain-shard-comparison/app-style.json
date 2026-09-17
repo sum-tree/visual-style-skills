@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "porcelain-shard-comparison",
+  "skillName": "porcelain-shard-comparison",
+  "name": "陶瓷碎片风",
+  "nameEn": "Porcelain Shards",
+  "description": "不规则瓷片、真实釉面与胎土断口、原图釉色转译和大面积瓷白留白。",
+  "descriptionEn": "Irregular porcelain shards, authentic glaze and biscuit breaks, source-derived glaze colors, and expansive porcelain-white negative space.",
+  "accent": ["#F1ECE2", "#6F98A0"],
+  "defaultVariant": "default",
+  "defaultQuality": "medium",
+  "outputSuffix": "porcelain_shard_comparison",
+  "variants": [
+    {
+      "id": "default",
+      "label": "诗意重构",
+      "labelEn": "Poetic Reconstruction",
+      "prompt": "将输入照片转化为陶瓷碎片风的当代东方艺术作品。保留主要主体的身份或类型、数量、姿态或方向、总体位置、遮挡关系、主轮廓和关键空间关系，不增加、删除、替换或移动主要主体；可合并无关微小纹理。让主体真正由大小不同、形状不规则的中国瓷器碎片重新构成，而不是在完整照片上叠加裂纹：较大瓷片承担主轮廓，中小瓷片连接关键细节；碎片具有真实釉面、胎土断口、细裂、缺角、自然间隙、轻微错位和少量缺失，同时保持主体清晰可辨。从原图提取 2–5 个记忆色并转译为相应釉色，不固定使用青花蓝；传统瓷器纹样只能局部暗示。使用温润瓷白、象牙白或极浅灰米色形成大面积连续留白，并让留白穿入碎片之间。整体清透、克制、诗意、当代、东方、有收藏级陶瓷艺术质感。避免规则马赛克、完整陶瓷雕塑、满屏国潮纹样、古董陈列、3D 塑料、树脂或玻璃感、过度镜面和照片滤镜。"
+    }
+  ]
+}
