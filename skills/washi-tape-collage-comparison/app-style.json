@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "washi-tape-collage-comparison",
+  "skillName": "washi-tape-collage-comparison",
+  "name": "纸胶带拼贴风",
+  "nameEn": "Washi Tape Collage",
+  "description": "用约 10–18 片半透明和纸胶带、手撕边与大量暖白留白，将照片重构为高级日系文具拼贴。",
+  "descriptionEn": "Rebuilds photos with roughly 10–18 translucent washi-tape pieces, torn paper edges, restrained source-derived colors, and generous warm-white negative space.",
+  "accent": ["#C8D8DE", "#B76F63"],
+  "defaultVariant": "minimal-washi",
+  "defaultQuality": "medium",
+  "outputSuffix": "washi_tape_collage_comparison",
+  "variants": [
+    {
+      "id": "minimal-washi",
+      "label": "极简和纸胶带",
+      "labelEn": "Minimal Washi",
+      "prompt": "将输入图像转化为高级日本和纸胶带拼贴艺术。保留主体身份 / 类型、数量、主轮廓、姿态、方向、关键结构与主要空间关系，但删除照片级纹理和低价值细节。用约 10–18 片可明确辨认的和纸胶带重构主体，每片具有不同宽度、长度、方向与手撕 / 剪切边，通过自然重叠形成结构。胶带应有轻微半透明、精细纸纤维、柔软纸厚、极轻接触阴影和细小手工误差；禁止变成普通矢量色块或碎片马赛克。综合色从原图提炼为少量和谐、略去饱和的高级文具综合色，保留必要身份色，允许透明重叠产生轻微综合色变化。背景使用暖白、象牙白或自然微黄白日记纸并保留大量连续留白。不要填满画布。默认不添加文字；只有用户明确要求时才加入 1–3 个英文单词的小标题。禁止贴纸、邮票、票券、卡片、信封、胶带卷、剪刀、手、书桌、工艺工具、剪贴簿杂乱、复杂花纹、重阴影、塑料 3D、油画、水彩、卡通渲染、脏旧背景、Logo、水印和二维码。"
+    }
+  ]
+}

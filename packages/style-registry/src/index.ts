@@ -11,6 +11,7 @@ import porcelainShard from "../../../skills/porcelain-shard-comparison/app-style
 import traditionalWatercolor from "../../../skills/traditional-expressive-watercolor-comparison/app-style.json";
 import travelPoster from "../../../skills/travel-poster-comparison/app-style.json";
 import vectorIllustration from "../../../skills/vector-illustration-comparison/app-style.json";
+import washiTapeCollage from "../../../skills/washi-tape-collage-comparison/app-style.json";
 import wuGuanzhong from "../../../skills/wu-guanzhong-expressive-ink-comparison/app-style.json";
 
 export type ImageQuality = "low" | "medium" | "high";
@@ -59,6 +60,7 @@ const manifests: Array<{ source: string; value: unknown }> = [
   { source: "vector-illustration-comparison", value: vectorIllustration },
   { source: "layered-papercraft-comparison", value: layeredPapercraft },
   { source: "art-postcard-comparison", value: artPostcard },
+  { source: "washi-tape-collage-comparison", value: washiTapeCollage },
 ];
 
 function parseManifest(input: unknown, source: string): AppStyleManifest {

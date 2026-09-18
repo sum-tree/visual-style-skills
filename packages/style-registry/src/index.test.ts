@@ -2,10 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { compileStylePrompt, listPublicStyles } from "./index";
 
-test("loads all fourteen style presets with valid defaults", () => {
+test("loads all fifteen style presets with valid defaults", () => {
   const styles = listPublicStyles();
-  assert.equal(styles.length, 14);
-  assert.equal(new Set(styles.map((style) => style.id)).size, 14);
+  assert.equal(styles.length, 15);
+  assert.equal(new Set(styles.map((style) => style.id)).size, 15);
   for (const style of styles) {
     assert.ok(style.nameEn);
     assert.ok(style.descriptionEn);
@@ -29,7 +29,7 @@ test("keeps prompt text server-side and compiles source constraints", () => {
   assert.equal(compiled.variant.id, "colored");
 });
 
-test("registers the seven added style presets", () => {
+test("registers the eight added style presets", () => {
   const ids = new Set(listPublicStyles().map((style) => style.id));
   assert.ok(ids.has("porcelain-shard-comparison"));
   assert.ok(ids.has("ink-line-character-comparison"));
@@ -38,6 +38,7 @@ test("registers the seven added style presets", () => {
   assert.ok(ids.has("vector-illustration-comparison"));
   assert.ok(ids.has("layered-papercraft-comparison"));
   assert.ok(ids.has("art-postcard-comparison"));
+  assert.ok(ids.has("washi-tape-collage-comparison"));
 });
 
 test("rejects unknown style and variant ids", () => {
