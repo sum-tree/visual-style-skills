@@ -141,7 +141,6 @@ const COPY = {
     styleHint: "可多选；每张图片会按上传顺序独立处理",
     styleVariants: (name: string) => `${name}变体`,
     settingsTitle: "成品设置",
-    settingsHint: "标准画质适合多数对照成品",
     quality: "生成画质",
     low: "草稿",
     medium: "标准",
@@ -162,7 +161,6 @@ const COPY = {
     generate: "开始生成",
     gallery: "输出画廊",
     emptyTitle: "成品将在这里出现",
-    emptyCopy: "上传图片并选择风格后开始生成。默认输出包含未经风格化的真实原图。",
     incomplete: "生成未完成",
     retry: "重试当前项",
     cancelledTitle: "任务已取消",
@@ -224,8 +222,6 @@ const COPY = {
       `按 ${date} 官方标准价估算；最终费用以 API 服务商账单为准。`,
     clearBilling: "清空本地明细",
     noChargeData: "暂无金额",
-    footer:
-      "API Key 仅存在服务端环境变量或临时内存会话中，不写入浏览器存储。",
   },
   en: {
     returnTop: "Back to top",
@@ -256,7 +252,6 @@ const COPY = {
     styleHint: "Select multiple styles; every image is processed independently in upload order",
     styleVariants: (name: string) => `${name} variants`,
     settingsTitle: "Output settings",
-    settingsHint: "Standard quality suits most comparison artworks",
     quality: "Generation quality",
     low: "Draft",
     medium: "Standard",
@@ -278,8 +273,6 @@ const COPY = {
     generate: "Start generating",
     gallery: "Output gallery",
     emptyTitle: "Your artwork will appear here",
-    emptyCopy:
-      "Upload images and choose styles to begin. Every comparison keeps the authentic, unstyled source image.",
     incomplete: "Generation incomplete",
     retry: "Retry this item",
     cancelledTitle: "Job cancelled",
@@ -343,8 +336,6 @@ const COPY = {
       `Estimated with official standard rates dated ${date}; the API provider invoice is authoritative.`,
     clearBilling: "Clear local details",
     noChargeData: "No amount",
-    footer:
-      "API keys remain in server environment variables or temporary server-memory sessions—never browser storage.",
   },
 };
 
@@ -1265,7 +1256,6 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
               <span className="step-index">03</span>
               <div>
                 <h2 id="settings-title">{copy.settingsTitle}</h2>
-                <p>{copy.settingsHint}</p>
               </div>
             </div>
 
@@ -1377,7 +1367,6 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
             <div className="empty-gallery">
               <span>◇</span>
               <strong>{copy.emptyTitle}</strong>
-              <p>{copy.emptyCopy}</p>
             </div>
           ) : (
             <div className="result-list">
@@ -1476,7 +1465,6 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
 
       <footer className="site-footer">
         <span>VISUAL STYLE SKILLS · 2026</span>
-        <p>{copy.footer}</p>
       </footer>
     </main>
   );
