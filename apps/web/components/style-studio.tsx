@@ -139,6 +139,8 @@ const COPY = {
     removeImage: "移除图片",
     styleTitle: "选择艺术风格",
     styleHint: "可多选；每张图片会按上传顺序独立处理",
+    selectStyles: "选择风格",
+    stylesSelected: (count: number) => `已选 ${count} 种`,
     styleVariants: (name: string) => `${name}变体`,
     settingsTitle: "成品设置",
     quality: "生成画质",
@@ -250,6 +252,8 @@ const COPY = {
     removeImage: "Remove image",
     styleTitle: "Choose art styles",
     styleHint: "Select multiple styles; every image is processed independently in upload order",
+    selectStyles: "Select styles",
+    stylesSelected: (count: number) => `${count} selected`,
     styleVariants: (name: string) => `${name} variants`,
     settingsTitle: "Output settings",
     quality: "Generation quality",
@@ -340,6 +344,23 @@ const COPY = {
 };
 
 const ACCEPTED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const STYLE_ICONS: Record<string, string> = {
+  "monet-comparison": "monet",
+  "picasso-geometric-comparison": "picasso",
+  "chinese-shanshui-comparison": "shanshui",
+  "modern-gongbi-sketch-comparison": "gongbi",
+  "traditional-expressive-watercolor-comparison": "watercolor",
+  "modern-minimal-illustration-comparison": "minimal",
+  "wu-guanzhong-expressive-ink-comparison": "wu",
+  "porcelain-shard-comparison": "porcelain",
+  "ink-line-character-comparison": "inkline",
+  "paper-cut-collage-comparison": "papercut",
+  "travel-poster-comparison": "travel",
+  "vector-illustration-comparison": "vector",
+  "layered-papercraft-comparison": "papercraft",
+  "art-postcard-comparison": "postcard",
+  "washi-tape-collage-comparison": "washi",
+};
 const MAX_FILE_BYTES = 12 * 1024 * 1024;
 const MAX_UPLOADS = 12;
 
@@ -1200,7 +1221,19 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
               </div>
             </div>
 
-            <div className="style-grid">
+            <details className="style-picker">
+              <summary className="style-picker-trigger">
+                <span>
+                  {selectedStyles.length
+                    ? selectedStyles.map(localizedStyleName).join(locale === "zh" ? "、" : ", ")
+                    : copy.selectStyles}
+                </span>
+                <span className="style-picker-count">
+                  {copy.stylesSelected(selectedStyles.length)}
+                </span>
+                <span className="style-picker-chevron" aria-hidden="true">⌄</span>
+              </summary>
+              <div className="style-grid">
               {styles.map((style) => {
                 const selected = Boolean(selection[style.id]);
                 const styleName = localizedStyleName(style);
@@ -1216,8 +1249,9 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
                       aria-pressed={selected}
                     >
                       <span className="style-swatch">
-                        <i />
-                        <b>{selected ? "✓" : ""}</b>
+                        {STYLE_ICONS[style.id] ? (
+                          <img src={`/style-icons/${STYLE_ICONS[style.id]}.png`} alt="" />
+                        ) : null}
                       </span>
                       <span className="style-card-copy">
                         <strong>{styleName}</strong>
@@ -1225,6 +1259,7 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
                           {locale === "en" ? style.descriptionEn : style.description}
                         </small>
                       </span>
+                      <span className="style-check" aria-hidden="true">{selected ? "✓" : ""}</span>
                     </button>
                     {selected && style.variants.length > 1 ? (
                       <div
@@ -1248,7 +1283,8 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
                   </article>
                 );
               })}
-            </div>
+              </div>
+            </details>
           </div>
 
           <div className="panel" aria-labelledby="settings-title">

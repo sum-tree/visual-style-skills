@@ -1326,61 +1326,51 @@ button {
   cursor: not-allowed;
 }
 
+.style-picker {
+  position: relative;
+}
+
+.style-picker-trigger {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--strong-line);
+  background: var(--control-surface);
+  cursor: pointer;
+  list-style: none;
+}
+
+.style-picker-trigger::-webkit-details-marker { display: none; }
+.style-picker-trigger:focus-visible { outline: 2px solid var(--vermillion); outline-offset: 2px; }
+.style-picker-trigger > span:first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.style-picker-count { flex: none; color: var(--muted); font-size: 12px; }
+.style-picker-chevron { flex: none; font-size: 20px; line-height: 1; }
+.style-picker[open] .style-picker-chevron { transform: rotate(180deg); }
+
 .style-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.style-monet-comparison {
-  --accent-a: #7aa8a4;
-  --accent-b: #e7c77a;
-}
-
-.style-picasso-geometric-comparison {
-  --accent-a: #1864c8;
-  --accent-b: #f2492e;
-}
-
-.style-chinese-shanshui-comparison {
-  --accent-a: #353a3b;
-  --accent-b: #b9b6a7;
-}
-
-.style-modern-gongbi-sketch-comparison {
-  --accent-a: #6e8f85;
-  --accent-b: #c7a874;
-}
-
-.style-traditional-expressive-watercolor-comparison {
-  --accent-a: #f3a63b;
-  --accent-b: #d95d86;
-}
-
-.style-modern-minimal-illustration-comparison {
-  --accent-a: #e7b62d;
-  --accent-b: #6b8d61;
-}
-
-.style-wu-guanzhong-expressive-ink-comparison {
-  --accent-a: #1e2222;
-  --accent-b: #e65b32;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  max-height: min(60vh, 500px);
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-top: 0;
+  background: var(--paper);
 }
 
 .style-card {
-  border: 1px solid var(--card-line);
-  background: var(--soft-surface);
-  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: border-color 150ms ease, background-color 150ms ease;
 }
 
 .style-card:hover,
 .style-card.selected {
   border-color: var(--card-hover-line);
-  box-shadow: var(--card-hover-shadow);
-}
-
-.style-card.selected {
-  transform: translateY(-1px);
+  background: var(--soft-surface);
 }
 
 .style-select {
@@ -1389,59 +1379,28 @@ button {
   background: transparent;
   padding: 10px;
   display: grid;
-  grid-template-columns: 70px minmax(0, 1fr);
+  grid-template-columns: 48px minmax(0, 1fr) 20px;
+  align-items: center;
   gap: 12px;
   text-align: left;
   cursor: pointer;
 }
 
+.style-select:focus-visible {
+  outline: 2px solid var(--vermillion);
+  outline-offset: -2px;
+}
+
 .style-swatch {
-  height: 70px;
+  height: 48px;
   position: relative;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 72% 28%, color-mix(in srgb, var(--accent-b) 80%, white), transparent 23%),
-    linear-gradient(145deg, color-mix(in srgb, var(--accent-a) 85%, white), var(--accent-b));
+  background: var(--paper-deep);
 }
 
-.style-swatch::before,
-.style-swatch::after,
-.style-swatch i {
-  content: "";
-  position: absolute;
-  background: var(--swatch-cutout);
-}
+.style-swatch img { width: 100%; height: 100%; display: block; object-fit: cover; }
 
-.style-swatch::before {
-  width: 65px;
-  height: 15px;
-  transform: rotate(-34deg);
-  left: -8px;
-  top: 30px;
-}
-
-.style-swatch::after {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  right: -7px;
-  bottom: -8px;
-}
-
-.style-swatch i {
-  width: 1px;
-  height: 80px;
-  left: 37px;
-  top: -6px;
-  transform: rotate(19deg);
-  opacity: 0.8;
-}
-
-.style-swatch b {
-  position: absolute;
-  right: 6px;
-  top: 6px;
-  z-index: 2;
+.style-check {
   width: 20px;
   height: 20px;
   display: grid;
@@ -1456,7 +1415,7 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 6px;
+  gap: 2px;
 }
 
 .style-card-copy strong {
@@ -1467,8 +1426,8 @@ button {
 
 .style-card-copy small {
   color: var(--muted);
-  font-size: 10px;
-  line-height: 1.55;
+  font-size: 11px;
+  line-height: 1.6;
 }
 
 .variant-row {
