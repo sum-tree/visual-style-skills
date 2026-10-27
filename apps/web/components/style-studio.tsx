@@ -20,6 +20,7 @@ import {
 
 type Locale = "zh" | "en";
 type ApiKeyStatus = "loading" | "missing" | "session" | "environment";
+type StylePreview = { icon: string; name: string; left: number; top: number };
 
 type UploadItem = {
   id: string;
@@ -392,6 +393,7 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
   const [selection, setSelection] = useState<Record<string, string>>(() => ({
     [styles[0].id]: styles[0].defaultVariant,
   }));
+  const [stylePreview, setStylePreview] = useState<StylePreview | null>(null);
   const [quality, setQuality] = useState<ImageQuality>("medium");
   const [resolution, setResolution] = useState<OutputResolution>("1k");
   const [primaryOutput, setPrimaryOutput] = useState<"comparison" | "effect">(
@@ -422,6 +424,17 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
   useEffect(() => {
     document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";
   }, [locale]);
+
+  useEffect(() => {
+    if (!stylePreview) return;
+    const hidePreview = () => setStylePreview(null);
+    window.addEventListener("resize", hidePreview);
+    window.addEventListener("scroll", hidePreview, true);
+    return () => {
+      window.removeEventListener("resize", hidePreview);
+      window.removeEventListener("scroll", hidePreview, true);
+    };
+  }, [stylePreview]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -658,6 +671,21 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
       if (next[style.id]) delete next[style.id];
       else next[style.id] = style.defaultVariant;
       return next;
+    });
+  }
+
+  function showStylePreview(target: HTMLElement, icon: string, name: string) {
+    const rect = target.getBoundingClientRect();
+    const width = Math.min(256, window.innerWidth - 32);
+    const height = width + 48;
+    const preferredLeft = rect.right + 12 + width <= window.innerWidth - 16
+      ? rect.right + 12
+      : rect.left - width - 12;
+    setStylePreview({
+      icon,
+      name,
+      left: Math.max(16, Math.min(preferredLeft, window.innerWidth - width - 16)),
+      top: Math.max(16, Math.min(rect.top, window.innerHeight - height - 16)),
     });
   }
 
@@ -1221,7 +1249,7 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
               </div>
             </div>
 
-            <details className="style-picker">
+            <details className="style-picker" onToggle={() => setStylePreview(null)}>
               <summary className="style-picker-trigger">
                 <span>
                   {selectedStyles.length
@@ -1233,7 +1261,7 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
                 </span>
                 <span className="style-picker-chevron" aria-hidden="true">⌄</span>
               </summary>
-              <div className="style-grid">
+              <div className="style-grid" onScroll={() => setStylePreview(null)}>
               {styles.map((style) => {
                 const selected = Boolean(selection[style.id]);
                 const styleName = localizedStyleName(style);
@@ -1247,8 +1275,22 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
                       className="style-select"
                       onClick={() => toggleStyle(style)}
                       aria-pressed={selected}
+                      onFocus={(event) => {
+                        if (!event.currentTarget.matches(":focus-visible")) return;
+                        const swatch = event.currentTarget.querySelector<HTMLElement>(".style-swatch");
+                        const icon = STYLE_ICONS[style.id];
+                        if (swatch && icon) showStylePreview(swatch, icon, styleName);
+                      }}
+                      onBlur={() => setStylePreview(null)}
                     >
-                      <span className="style-swatch">
+                      <span
+                        className="style-swatch"
+                        onMouseEnter={(event) => {
+                          const icon = STYLE_ICONS[style.id];
+                          if (icon) showStylePreview(event.currentTarget, icon, styleName);
+                        }}
+                        onMouseLeave={() => setStylePreview(null)}
+                      >
                         {STYLE_ICONS[style.id] ? (
                           <img src={`/style-icons/${STYLE_ICONS[style.id]}.png?v=2`} alt="" />
                         ) : null}
@@ -1498,6 +1540,17 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
           )}
         </aside>
       </div>
+
+      {stylePreview ? (
+        <div
+          className="style-preview"
+          style={{ left: stylePreview.left, top: stylePreview.top }}
+          aria-hidden="true"
+        >
+          <img src={`/style-previews/${stylePreview.icon}.webp`} alt="" />
+          <span>{stylePreview.name}</span>
+        </div>
+      ) : null}
 
       <footer className="site-footer">
         <span>VISUAL STYLE SKILLS · 2026</span>
