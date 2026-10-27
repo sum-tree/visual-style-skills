@@ -1250,7 +1250,7 @@ export function StyleStudio({ styles }: { styles: PublicStyle[] }) {
                     >
                       <span className="style-swatch">
                         {STYLE_ICONS[style.id] ? (
-                          <img src={`/style-icons/${STYLE_ICONS[style.id]}.png`} alt="" />
+                          <img src={`/style-icons/${STYLE_ICONS[style.id]}.png?v=2`} alt="" />
                         ) : null}
                       </span>
                       <span className="style-card-copy">
