@@ -1,6 +1,6 @@
 interface:
   display_name: "简约留白对照图"
-  short_description: "以暖白空场、低饱和薄色片和局部消隐提炼照片，支持衬线诗题并输出独立对照 PNG"
+  short_description: "以极大暖白留白和极少量抽象片形概括照片，支持衬线诗题并输出独立高清对照 PNG"
   default_prompt: "使用 $minimal-negative-space-comparison 将全部照片按上传顺序制作成简约留白风格，并逐张输出高清对照 PNG。"
 policy:
   allow_implicit_invocation: true

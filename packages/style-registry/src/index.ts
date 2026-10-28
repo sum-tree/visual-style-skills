@@ -36,6 +36,7 @@ export type AppStyleManifest = {
   defaultVariant: string;
   defaultQuality: ImageQuality;
   outputSuffix: string;
+  sourceAbstraction?: "sparse-fragments";
   variants: StyleVariant[];
 };
 
@@ -81,6 +82,8 @@ function parseManifest(input: unknown, source: string): AppStyleManifest {
     typeof value.defaultVariant !== "string" ||
     !["low", "medium", "high"].includes(value.defaultQuality ?? "") ||
     typeof value.outputSuffix !== "string" ||
+    (value.sourceAbstraction !== undefined &&
+      value.sourceAbstraction !== "sparse-fragments") ||
     !Array.isArray(value.variants) ||
     value.variants.length === 0
   ) {
@@ -153,7 +156,9 @@ export function compileStylePrompt(options: {
     customInstruction
       ? `Additional user instruction, apply only when consistent with this preset: ${customInstruction}`
       : "",
-    "Preserve the original aspect ratio and crop direction. Keep every major subject tied to the source: preserve its identity or type, count, pose or direction, general position, occlusion order, and the main spatial relationships required by this preset. Do not add unrelated objects or merge content from other images.",
+    style.sourceAbstraction === "sparse-fragments"
+      ? "Preserve the original aspect ratio and crop direction. Use the source only to derive a few abstract fragments, representative muted colors, broad directional gestures, and relative visual balance. Omit, merge, interrupt, or flatten source objects and contours as needed for the preset's negative-space target; do not reconstruct every subject, its count, complete silhouette, internal features, or full scene depth. Do not add unrelated motifs or merge content from other images."
+      : "Preserve the original aspect ratio and crop direction. Keep every major subject tied to the source: preserve its identity or type, count, pose or direction, general position, occlusion order, and the main spatial relationships required by this preset. Do not add unrelated objects or merge content from other images.",
     "Generate only one standalone stylized effect image that fills the complete source frame. Do not create a comparison layout, border, title, caption, numbering, signature, watermark, logo, seal, frame, or other text unless it is explicitly required by the selected style preset or by the user's instruction.",
   ]
     .filter(Boolean)
