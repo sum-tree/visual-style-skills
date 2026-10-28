@@ -4,6 +4,7 @@ import inkLineCharacter from "../../../skills/ink-line-character-comparison/app-
 import layeredPapercraft from "../../../skills/layered-papercraft-comparison/app-style.json";
 import modernGongbi from "../../../skills/modern-gongbi-sketch-comparison/app-style.json";
 import modernMinimal from "../../../skills/modern-minimal-illustration-comparison/app-style.json";
+import minimalNegativeSpace from "../../../skills/minimal-negative-space-comparison/app-style.json";
 import monet from "../../../skills/monet-comparison/app-style.json";
 import paperCutCollage from "../../../skills/paper-cut-collage-comparison/app-style.json";
 import picasso from "../../../skills/picasso-geometric-comparison/app-style.json";
@@ -61,6 +62,7 @@ const manifests: Array<{ source: string; value: unknown }> = [
   { source: "layered-papercraft-comparison", value: layeredPapercraft },
   { source: "art-postcard-comparison", value: artPostcard },
   { source: "washi-tape-collage-comparison", value: washiTapeCollage },
+  { source: "minimal-negative-space-comparison", value: minimalNegativeSpace },
 ];
 
 function parseManifest(input: unknown, source: string): AppStyleManifest {

@@ -2,10 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { compileStylePrompt, listPublicStyles } from "./index";
 
-test("loads all fifteen style presets with valid defaults", () => {
+test("loads all sixteen style presets with valid defaults", () => {
   const styles = listPublicStyles();
-  assert.equal(styles.length, 15);
-  assert.equal(new Set(styles.map((style) => style.id)).size, 15);
+  assert.equal(styles.length, 16);
+  assert.equal(new Set(styles.map((style) => style.id)).size, 16);
   for (const style of styles) {
     assert.ok(style.nameEn);
     assert.ok(style.descriptionEn);

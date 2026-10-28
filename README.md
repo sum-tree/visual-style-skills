@@ -54,6 +54,7 @@ npm run check
 | `layered-papercraft-comparison` | 层叠纸张、微缩景观基座、柔和阴影与大留白 | `使用 $layered-papercraft-comparison 按立体剪纸风处理全部图片` |
 | `art-postcard-comparison` | 象牙白旧纸、小型丝网印刷插画、邮戳与大量留白 | `使用 $art-postcard-comparison 按艺术明信片风处理全部图片` |
 | `washi-tape-collage-comparison` | 半透明和纸胶带、手撕边、叠色与暖白留白 | `使用 $washi-tape-collage-comparison 按纸胶带拼贴风处理全部图片` |
+| `minimal-negative-space-comparison` | 暖白空场、低饱和薄色片、有机轮廓与局部消隐，可选衬线诗题 | `使用 $minimal-negative-space-comparison 按简约留白风格处理全部图片` |
 
 ## 使用方式
 

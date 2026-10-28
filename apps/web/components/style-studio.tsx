@@ -361,6 +361,7 @@ const STYLE_ICONS: Record<string, string> = {
   "layered-papercraft-comparison": "papercraft",
   "art-postcard-comparison": "postcard",
   "washi-tape-collage-comparison": "washi",
+  "minimal-negative-space-comparison": "negative-space",
 };
 const MAX_FILE_BYTES = 12 * 1024 * 1024;
 const MAX_UPLOADS = 12;

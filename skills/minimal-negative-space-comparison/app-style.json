@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "minimal-negative-space-comparison",
+  "skillName": "minimal-negative-space-comparison",
+  "name": "简约留白",
+  "nameEn": "Minimal Negative Space",
+  "description": "暖白空场、低饱和薄色片与局部消隐的景物残影。",
+  "descriptionEn": "Warm ivory space, muted translucent fragments, and selectively fading organic contours.",
+  "accent": ["#F3F0E8", "#7E9096"],
+  "defaultVariant": "quiet-fragments",
+  "defaultQuality": "medium",
+  "outputSuffix": "minimal_negative_space_comparison",
+  "variants": [
+    {
+      "id": "quiet-fragments",
+      "label": "无字留白",
+      "labelEn": "Quiet Fragments",
+      "prompt": "将输入照片转化为简约留白艺术效果。保留主要主体身份、数量、姿态、方向、有机主轮廓、左右远近与遮挡关系；允许删除重复纹理、压缩环境，但不新增景物，不把近景主体缩成不可辨小点。以接近 #F3F0E8 的暖米白连续空场为构图主体，风景留白约 65%–85%；将原片提炼为中下部 2–4 个疏朗视觉组，从源图提取 2–4 种低饱和代表色，形成薄透哑光色片。保留关键边缘，次要边缘选择性淡入纸色；允许极轻细颗粒、干擦与透明薄色，禁止全局模糊、规则几何卡通、粗描边、大片湿画法、飞溅、过重纸纹、剪纸层叠与投影。让天空和地面大面积融入暖白，不把完整缩小照片作为矩形贴片。不要照搬雪山、湿地或其他示例题材。仅生成单张效果图，无文字、诗题、边框或内部对照。"
+    },
+    {
+      "id": "poetic-title",
+      "label": "衬线诗题",
+      "labelEn": "Poetic Serif Title",
+      "prompt": "将输入照片转化为带克制诗题的简约留白艺术效果。保留主要主体身份、数量、姿态、方向、有机主轮廓、左右远近与遮挡关系；可简化重复纹理及环境，不能新增景物或把近景主体缩成不可辨小点。暖米白 #F3F0E8 空场主导画面，风景留白约 65%–85%；从源图提取 2–4 种低饱和代表色，把景物提炼为中下部 2–4 个稀疏视觉组和薄透哑光色片，关键轮廓清楚、次要边缘选择性淡入纸色，保留极轻细颗粒与干擦。避免整片天空地面铺色、全局模糊、规则几何卡通、粗描边、大片水彩晕染、飞溅、厚纸纹、剪纸层叠、投影和矩形照片贴片。效果底部留白加入一行小号、常规字重、深灰衬线诗题，宽约画幅 25%–45%，与景物及底边保持宽松距离。优先准确使用用户提供的题名；未提供时依据可见景物写 3–6 词英文诗题，不编造地点、日期、坐标或作者，不照搬示例题名。仅生成单张效果图，无副标题、署名、印章、Logo、水印、外框或内部对照。"
+    }
+  ]
+}
